@@ -127,6 +127,8 @@ input{
 <input type="text" id="disasterType" placeholder="Disaster Type"><br>
 <input type="text" id="location" placeholder="Location"><br>
 <button class="report" onclick="submitReport()">Submit Report</button>
+<h3>Saved Disaster Reports</h3>
+<ul id="reportList"></ul>   
 </div>
 
 <div class="card">
@@ -139,36 +141,57 @@ input{
 </div>
 
 <script>
+
 function sendSOS(){
-    alert("🚨 SOS ALERT SENT TO RESCUE TEAM!");
-}
-
-const sampleAlerts = [
-    "🌧 Heavy rain in nearby areas",
-    "🌪 Cyclone approaching coast",
-    "🌍 Earthquake detected nearby",
-    "🔥 Forest fire warning",
-    "🌊 Flood alert near riverbank"
-];
-
-function generateRandomAlert(){
-    const randomIndex = Math.floor(Math.random() * sampleAlerts.length);
-    document.getElementById("alerts").innerHTML = `<p>${sampleAlerts[randomIndex]}</p>`;
+alert("🚨 SOS ALERT SENT!");
 }
 
 function submitReport(){
-    const type = document.getElementById("disasterType").value;
-    const location = document.getElementById("location").value;
-    if(type && location){
-        alert(`✅ Disaster Report Submitted!\nType: ${type}\nLocation: ${location}`);
-        document.getElementById("disasterType").value = "";
-        document.getElementById("location").value = "";
-    }else{
-        alert("⚠️ Please fill all fields");
-    }
+
+let type=document.getElementById("disasterType").value;
+let location=document.getElementById("location").value;
+
+if(type=="" || location==""){
+alert("Please fill all details");
+return;
 }
+
+let reports=JSON.parse(localStorage.getItem("reports")) || [];
+
+reports.push({
+type:type,
+location:location
+});
+
+localStorage.setItem("reports",JSON.stringify(reports));
+
+alert("Report saved in database");
+
+showReports();
+
+}
+
+function showReports(){
+
+let reports=JSON.parse(localStorage.getItem("reports")) || [];
+
+let output="";
+
+for(let i=0;i<reports.length;i++){
+
+output+=`<li>${reports[i].type} - ${reports[i].location}</li>`;
+
+}
+
+document.getElementById("reportList").innerHTML=output;
+
+}
+
+window.onload=showReports;
+
 </script>
 
 </body>
 </html>
+
 
