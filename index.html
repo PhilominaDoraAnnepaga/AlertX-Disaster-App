@@ -2,6 +2,9 @@
 <html>
 <head>
 <title>AlertX Disaster Rescue System</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <style>
 
@@ -60,6 +63,48 @@ width:230px;
 <!-- SOS -->
 
 <button class="sos" onclick="sendSOS()">🚨 SOS EMERGENCY</button>
+<button onclick="launchRescueDrone()">Launch Rescue Drone</button>
+  var map = L.map('map').setView([20.5937, 78.9629], 5);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+maxZoom:19
+}).addTo(map);
+
+// User Location
+
+function getLocation(){
+
+if(navigator.geolocation){
+
+navigator.geolocation.getCurrentPosition(function(pos){
+
+let lat = pos.coords.latitude;
+let lon = pos.coords.longitude;
+
+map.setView([lat,lon],12);
+
+L.marker([lat,lon]).addTo(map)
+.bindPopup("Your Location")
+.openPopup();
+
+document.getElementById("gps").innerHTML =
+"Latitude: "+lat+"<br>Longitude: "+lon;
+
+});
+
+}
+
+}
+
+// Example Disaster Marker
+
+L.marker([17.6868,83.2185]).addTo(map)
+.bindPopup("Flood Report - Vizag");
+
+// Shelter Marker
+
+L.marker([17.7000,83.2000]).addTo(map)
+.bindPopup("Safe Shelter Location");
 
 <p id="sosmsg"></p>
 
@@ -87,9 +132,13 @@ width:230px;
 
 <p id="gps"></p>
 
-<hr>
+
+ <h2>Live Disaster Map</h2>
+
+<div id="map" style="height:400px;width:100%;border-radius:10px;"></div>
 
 <h2>Safe Places</h2>
+<hr>
 
 <div class="card">
 <ul>
@@ -157,6 +206,81 @@ width:230px;
 <p id="voice"></p>
 
 <script>
+// REAL DISASTER ALERT SIMULATION
+
+function loadDisasterAlerts(){
+
+const disasters = [
+{place:"Visakhapatnam",type:"Cyclone Warning"},
+{place:"Vijayawada",type:"Flood Alert"},
+{place:"Hyderabad",type:"Earthquake Risk"},
+{place:"Chennai",type:"Heavy Rain Alert"}
+];
+
+disasters.forEach(d => {
+
+var marker = L.marker([16.5 + Math.random(),80.6 + Math.random()]).addTo(map);
+
+marker.bindPopup("⚠️ Disaster Alert<br>"+d.type+"<br>"+d.place);
+
+});
+
+}
+
+loadDisasterAlerts();
+// LIVE WEATHER ALERT SYSTEM
+
+async function loadWeatherAlert(){
+
+try{
+
+let response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=16.5&longitude=80.6&current_weather=true");
+
+let data = await response.json();
+
+let weather = data.current_weather;
+
+alert("🌦️ Current Temperature: "+weather.temperature+"°C\nWind Speed: "+weather.windspeed+" km/h");
+
+}catch(error){
+
+console.log("Weather API error");
+
+}
+
+}
+
+loadWeatherAlert();
+// RESCUE DRONE SIMULATION
+
+function launchRescueDrone(){
+
+var drone = L.marker([16.506,80.648]).addTo(map);
+
+drone.bindPopup("🚁 Rescue Drone Launched");
+
+var path = [
+[16.506,80.648],
+[16.508,80.650],
+[16.510,80.653],
+[16.512,80.656]
+];
+
+var i=0;
+
+var moveDrone = setInterval(()=>{
+
+if(i>=path.length){
+clearInterval(moveDrone);
+return;
+}
+
+drone.setLatLng(path[i]);
+i++;
+
+},1500);
+
+}
 
 function sendSOS(){
 document.getElementById("sosmsg").innerHTML=
@@ -275,3 +399,4 @@ document.getElementById("voice").innerHTML=
 
 </body>
 </html>
+
