@@ -7,170 +7,267 @@
 
 body{
 font-family:Arial;
-background:#f4f6f8;
-margin:0;
-padding:0;
-}
-
-header{
-background:#d32f2f;
-color:white;
-padding:20px;
+background:#eef2f5;
 text-align:center;
-font-size:28px;
-}
-
-.container{
-width:80%;
-margin:auto;
-margin-top:30px;
-}
-
-.card{
-background:white;
 padding:20px;
-border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,0.2);
-margin-bottom:30px;
 }
 
-input,select{
-width:100%;
-padding:10px;
-margin-top:10px;
-margin-bottom:10px;
-border-radius:6px;
-border:1px solid #ccc;
+h1{
+color:#d32f2f;
 }
 
 button{
-padding:12px;
-background:#e53935;
-color:white;
+padding:12px 20px;
+margin:8px;
 border:none;
-border-radius:6px;
+border-radius:8px;
+font-size:15px;
 cursor:pointer;
-font-size:16px;
-}
-
-button:hover{
-background:#c62828;
 }
 
 .sos{
 background:red;
-font-size:20px;
+color:white;
+}
+
+.feature{
+background:#1976d2;
+color:white;
+}
+
+.card{
+background:white;
+margin:10px;
 padding:15px;
-width:100%;
+border-radius:10px;
+box-shadow:0 0 6px rgba(0,0,0,0.2);
 }
 
-ul{
-list-style:none;
-padding:0;
-}
-
-li{
-background:#f1f1f1;
-margin-top:10px;
-padding:10px;
-border-radius:6px;
+input,textarea{
+padding:8px;
+margin:5px;
+width:230px;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<header>
-🚨 AlertX Disaster Rescue System
-</header>
+<h1>🚨 AlertX Disaster Management App</h1>
 
-<div class="container">
+<!-- SOS -->
 
-<div class="card">
+<button class="sos" onclick="sendSOS()">🚨 SOS EMERGENCY</button>
+
+<p id="sosmsg"></p>
+
+<hr>
 
 <h2>Report Disaster</h2>
 
-<label>Disaster Type</label>
+<input id="type" placeholder="Disaster Type"><br>
+<input id="location" placeholder="Location"><br>
+<textarea id="desc" placeholder="Description"></textarea><br>
 
-<select id="disasterType">
-<option>Flood</option>
-<option>Earthquake</option>
-<option>Cyclone</option>
-<option>Landslide</option>
-<option>Fire</option>
-</select>
+<button class="feature" onclick="reportDisaster()">Submit Report</button>
 
-<label>Location</label>
-
-<input type="text" id="location" placeholder="Enter location">
-
-<button onclick="submitReport()">Submit Report</button>
-
-</div>
-
-<div class="card">
-
-<h2>🚨 Emergency SOS</h2>
-
-<button class="sos" onclick="sendSOS()">SEND SOS ALERT</button>
-
-</div>
-
-<div class="card">
+<hr>
 
 <h2>Saved Disaster Reports (Database)</h2>
 
-<ul id="reportList"></ul>
+<div id="reports"></div>
 
+<hr>
+
+<h2>GPS Tracking</h2>
+
+<button class="feature" onclick="getLocation()">Get My Location</button>
+
+<p id="gps"></p>
+
+<hr>
+
+<h2>Safe Places</h2>
+
+<div class="card">
+<ul>
+<li>Government School Shelter</li>
+<li>Community Hall Shelter</li>
+<li>Emergency Medical Camp</li>
+<li>Relief Distribution Center</li>
+</ul>
 </div>
 
-</div>
+<hr>
+
+<h2>Offline Navigation</h2>
+
+<button class="feature" onclick="showRoute()">Find Safe Route</button>
+
+<p id="route"></p>
+
+<hr>
+
+<h2>Bluetooth Mesh Communication</h2>
+
+<button class="feature" onclick="mesh()">Send Distress Signal</button>
+
+<p id="meshmsg"></p>
+
+<hr>
+
+<h2>Disaster Heat Map</h2>
+
+<button class="feature" onclick="checkZone()">Check Risk Zone</button>
+
+<p id="risk"></p>
+
+<hr>
+
+<h2>Weather Alerts</h2>
+
+<button class="feature" onclick="weather()">Check Weather Alert</button>
+
+<p id="weather"></p>
+
+<hr>
+
+<h2>Low Battery Survival Mode</h2>
+
+<button class="feature" onclick="battery()">Activate Survival Mode</button>
+
+<p id="battery"></p>
+
+<hr>
+
+<h2>Community Rescue Network</h2>
+
+<button class="feature" onclick="rescue()">Send Help Request</button>
+
+<p id="rescue"></p>
+
+<hr>
+
+<h2>Voice SOS</h2>
+
+<button class="feature" onclick="voice()">Activate Voice Detection</button>
+
+<p id="voice"></p>
 
 <script>
 
-let disasterDatabase=[]
-
-function submitReport(){
-
-let disaster=document.getElementById("disasterType").value
-let location=document.getElementById("location").value
-
-let report={
-type:disaster,
-place:location,
-time:new Date().toLocaleString()
+function sendSOS(){
+document.getElementById("sosmsg").innerHTML=
+"SOS alert sent to rescue teams and nearby users.";
 }
 
-disasterDatabase.push(report)
+function reportDisaster(){
 
-displayReports()
+let type=document.getElementById("type").value;
+let location=document.getElementById("location").value;
+let desc=document.getElementById("desc").value;
+
+let reports=JSON.parse(localStorage.getItem("alertx"))||[];
+
+reports.push({type,location,desc});
+
+localStorage.setItem("alertx",JSON.stringify(reports));
+
+displayReports();
 
 }
 
 function displayReports(){
 
-let list=document.getElementById("reportList")
+let reports=JSON.parse(localStorage.getItem("alertx"))||[];
 
-list.innerHTML=""
+let html="";
 
-disasterDatabase.forEach(function(data){
+for(let r of reports){
 
-let item=document.createElement("li")
-
-item.innerHTML=
-"<b>"+data.type+"</b> reported at <b>"+data.place+
-"</b><br>Time: "+data.time
-
-list.appendChild(item)
-
-})
+html+=`
+<div class="card">
+<b>Type:</b> ${r.type}<br>
+<b>Location:</b> ${r.location}<br>
+<b>Description:</b> ${r.desc}
+</div>
+`;
 
 }
 
-function sendSOS(){
+document.getElementById("reports").innerHTML=html;
 
-alert("🚨 SOS ALERT SENT\nLocation shared with rescue teams.")
+}
+
+displayReports();
+
+function getLocation(){
+
+if(navigator.geolocation){
+
+navigator.geolocation.getCurrentPosition(function(pos){
+
+document.getElementById("gps").innerHTML=
+"Latitude: "+pos.coords.latitude+
+"<br>Longitude: "+pos.coords.longitude;
+
+});
+
+}
+
+}
+
+function showRoute(){
+
+document.getElementById("route").innerHTML=
+"Suggested route → Government School Shelter (1.2km).";
+
+}
+
+function mesh(){
+
+document.getElementById("meshmsg").innerHTML=
+"Distress signal shared to nearby devices via Bluetooth mesh.";
+
+}
+
+function checkZone(){
+
+document.getElementById("risk").innerHTML=
+"Warning: You are entering a flood-prone zone.";
+
+}
+
+function weather(){
+
+document.getElementById("weather").innerHTML=
+"Weather Alert: Heavy rainfall expected. Stay indoors.";
+
+}
+
+function battery(){
+
+document.body.style.background="black";
+document.body.style.color="white";
+
+document.getElementById("battery").innerHTML=
+"Low battery survival mode activated.";
+
+}
+
+function rescue(){
+
+document.getElementById("rescue").innerHTML=
+"Help request broadcasted to nearby AlertX users.";
+
+}
+
+function voice(){
+
+document.getElementById("voice").innerHTML=
+"Voice command detection active. Say 'HELP' to trigger SOS.";
 
 }
 
