@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AlertX Disaster Rescue System</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f2f2f2;
+text-align:center;
+}
+
+header{
+background:#111;
+color:white;
+padding:20px;
+font-size:28px;
+}
+
+.subtitle{
+color:gray;
+margin-bottom:20px;
+}
+
+.container{
+padding:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+margin:15px auto;
+max-width:400px;
+border-radius:10px;
+box-shadow:0 5px 10px rgba(0,0,0,0.1);
+}
+
+button{
+padding:15px 25px;
+border:none;
+border-radius:8px;
+font-size:18px;
+cursor:pointer;
+margin-top:10px;
+}
+
+.sos{
+background:red;
+color:white;
+font-size:22px;
+}
+
+.alert{
+background:orange;
+color:white;
+}
+
+.report{
+background:#007BFF;
+color:white;
+}
+
+.tip{
+background:#28a745;
+color:white;
+}
+
+input{
+padding:10px;
+width:80%;
+margin:5px;
+border-radius:5px;
+border:1px solid #ccc;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+🚨 AlertX
+</header>
+
+<p class="subtitle">Offline Disaster Rescue & Alert System</p>
+
+<div class="container">
+
+<div class="card">
+<h2>Emergency SOS</h2>
+<p>Press during emergency</p>
+<button class="sos" onclick="sendSOS()">SEND SOS</button>
+</div>
+
+<div class="card">
+<h2>Disaster Alerts</h2>
+<p>🌧 Flood warning in coastal areas</p>
+<p>🌪 Cyclone monitoring active</p>
+<p>🌍 Earthquake sensors active</p>
+</div>
+
+<div class="card">
+<h2>Nearby Safe Shelters</h2>
+<p>🏫 Government School Shelter</p>
+<p>🏥 Community Health Center</p>
+<p>🏟 Indoor Stadium Safe Zone</p>
+</div>
+
+<div class="card">
+<h2>Report Disaster</h2>
+
+<input type="text" placeholder="Disaster Type"><br>
+
+<input type="text" placeholder="Location"><br>
+
+<button class="report" onclick="report()">Submit Report</button>
+
+</div>
+
+<div class="card">
+<h2>Safety Tips</h2>
+
+<p>✔ Stay calm during emergency</p>
+<p>✔ Move to higher ground during floods</p>
+<p>✔ Follow evacuation instructions</p>
+
+</div>
+
+</div>
+
+<script>
+
+function sendSOS(){
+alert("🚨 SOS ALERT SENT TO RESCUE TEAM!");
+}
+
+function report(){
+alert("✅ Disaster Report Submitted!");
+}
+
+</script>
+
+</body>
+</html>
