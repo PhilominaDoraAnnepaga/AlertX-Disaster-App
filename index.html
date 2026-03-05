@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>AlertX Disaster Rescue System</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
+<title>AlertX Disaster Rescue System</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <style>
@@ -52,6 +53,12 @@ margin:5px;
 width:230px;
 }
 
+#map{
+height:400px;
+width:100%;
+border-radius:10px;
+}
+
 </style>
 
 </head>
@@ -60,51 +67,8 @@ width:230px;
 
 <h1>🚨 AlertX Disaster Management App</h1>
 
-<!-- SOS -->
-
 <button class="sos" onclick="sendSOS()">🚨 SOS EMERGENCY</button>
-<button onclick="launchRescueDrone()">Launch Rescue Drone</button>
-  var map = L.map('map').setView([20.5937, 78.9629], 5);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-maxZoom:19
-}).addTo(map);
-
-// User Location
-
-function getLocation(){
-
-if(navigator.geolocation){
-
-navigator.geolocation.getCurrentPosition(function(pos){
-
-let lat = pos.coords.latitude;
-let lon = pos.coords.longitude;
-
-map.setView([lat,lon],12);
-
-L.marker([lat,lon]).addTo(map)
-.bindPopup("Your Location")
-.openPopup();
-
-document.getElementById("gps").innerHTML =
-"Latitude: "+lat+"<br>Longitude: "+lon;
-
-});
-
-}
-
-}
-
-// Example Disaster Marker
-
-L.marker([17.6868,83.2185]).addTo(map)
-.bindPopup("Flood Report - Vizag");
-
-// Shelter Marker
-
-L.marker([17.7000,83.2000]).addTo(map)
-.bindPopup("Safe Shelter Location");
+<button class="feature" onclick="launchRescueDrone()">🚁 Launch Rescue Drone</button>
 
 <p id="sosmsg"></p>
 
@@ -121,7 +85,6 @@ L.marker([17.7000,83.2000]).addTo(map)
 <hr>
 
 <h2>Saved Disaster Reports (Database)</h2>
-
 <div id="reports"></div>
 
 <hr>
@@ -132,13 +95,15 @@ L.marker([17.7000,83.2000]).addTo(map)
 
 <p id="gps"></p>
 
+<hr>
 
- <h2>Live Disaster Map</h2>
+<h2>Live Disaster Map</h2>
 
-<div id="map" style="height:400px;width:100%;border-radius:10px;"></div>
+<div id="map"></div>
+
+<hr>
 
 <h2>Safe Places</h2>
-<hr>
 
 <div class="card">
 <ul>
@@ -206,7 +171,26 @@ L.marker([17.7000,83.2000]).addTo(map)
 <p id="voice"></p>
 
 <script>
-// REAL DISASTER ALERT SIMULATION
+
+// MAP INITIALIZATION
+
+var map = L.map('map').setView([20.5937,78.9629],5);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+maxZoom:19
+}).addTo(map);
+
+
+// SAMPLE MARKERS
+
+L.marker([17.6868,83.2185]).addTo(map)
+.bindPopup("Flood Report - Vizag");
+
+L.marker([17.7000,83.2000]).addTo(map)
+.bindPopup("Safe Shelter Location");
+
+
+// LOAD DISASTER ALERTS
 
 function loadDisasterAlerts(){
 
@@ -228,7 +212,9 @@ marker.bindPopup("⚠️ Disaster Alert<br>"+d.type+"<br>"+d.place);
 }
 
 loadDisasterAlerts();
-// LIVE WEATHER ALERT SYSTEM
+
+
+// WEATHER API
 
 async function loadWeatherAlert(){
 
@@ -240,9 +226,9 @@ let data = await response.json();
 
 let weather = data.current_weather;
 
-alert("🌦️ Current Temperature: "+weather.temperature+"°C\nWind Speed: "+weather.windspeed+" km/h");
+alert("🌦️ Temp: "+weather.temperature+"°C | Wind: "+weather.windspeed+" km/h");
 
-}catch(error){
+}catch(e){
 
 console.log("Weather API error");
 
@@ -251,15 +237,17 @@ console.log("Weather API error");
 }
 
 loadWeatherAlert();
-// RESCUE DRONE SIMULATION
+
+
+// RESCUE DRONE
 
 function launchRescueDrone(){
 
 var drone = L.marker([16.506,80.648]).addTo(map);
 
-drone.bindPopup("🚁 Rescue Drone Launched");
+drone.bindPopup("🚁 Rescue Drone Launched").openPopup();
 
-var path = [
+var path=[
 [16.506,80.648],
 [16.508,80.650],
 [16.510,80.653],
@@ -268,7 +256,7 @@ var path = [
 
 var i=0;
 
-var moveDrone = setInterval(()=>{
+var moveDrone=setInterval(()=>{
 
 if(i>=path.length){
 clearInterval(moveDrone);
@@ -282,10 +270,18 @@ i++;
 
 }
 
+
+// SOS
+
 function sendSOS(){
+
 document.getElementById("sosmsg").innerHTML=
 "SOS alert sent to rescue teams and nearby users.";
+
 }
+
+
+// DATABASE
 
 function reportDisaster(){
 
@@ -302,6 +298,7 @@ localStorage.setItem("alertx",JSON.stringify(reports));
 displayReports();
 
 }
+
 
 function displayReports(){
 
@@ -327,15 +324,26 @@ document.getElementById("reports").innerHTML=html;
 
 displayReports();
 
+
+// GPS
+
 function getLocation(){
 
 if(navigator.geolocation){
 
 navigator.geolocation.getCurrentPosition(function(pos){
 
+let lat=pos.coords.latitude;
+let lon=pos.coords.longitude;
+
 document.getElementById("gps").innerHTML=
-"Latitude: "+pos.coords.latitude+
-"<br>Longitude: "+pos.coords.longitude;
+"Latitude: "+lat+"<br>Longitude: "+lon;
+
+map.setView([lat,lon],12);
+
+L.marker([lat,lon]).addTo(map)
+.bindPopup("📍 Your Location")
+.openPopup();
 
 });
 
@@ -343,60 +351,47 @@ document.getElementById("gps").innerHTML=
 
 }
 
-function showRoute(){
 
+// OTHER FEATURES
+
+function showRoute(){
 document.getElementById("route").innerHTML=
 "Suggested route → Government School Shelter (1.2km).";
-
 }
 
 function mesh(){
-
 document.getElementById("meshmsg").innerHTML=
-"Distress signal shared to nearby devices via Bluetooth mesh.";
-
+"Distress signal shared via Bluetooth mesh.";
 }
 
 function checkZone(){
-
 document.getElementById("risk").innerHTML=
-"Warning: You are entering a flood-prone zone.";
-
+"Warning: Flood-prone zone detected.";
 }
 
 function weather(){
-
 document.getElementById("weather").innerHTML=
-"Weather Alert: Heavy rainfall expected. Stay indoors.";
-
+"Heavy rainfall expected.";
 }
 
 function battery(){
-
 document.body.style.background="black";
 document.body.style.color="white";
-
 document.getElementById("battery").innerHTML=
 "Low battery survival mode activated.";
-
 }
 
 function rescue(){
-
 document.getElementById("rescue").innerHTML=
-"Help request broadcasted to nearby AlertX users.";
-
+"Help request sent to nearby users.";
 }
 
 function voice(){
-
 document.getElementById("voice").innerHTML=
-"Voice command detection active. Say 'HELP' to trigger SOS.";
-
+"Voice detection active. Say HELP.";
 }
 
 </script>
 
 </body>
 </html>
-
