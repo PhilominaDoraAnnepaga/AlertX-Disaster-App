@@ -1,86 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>AlertX Disaster Rescue System</title>
 
 <style>
-
 body{
-font-family:Arial;
-margin:0;
-background:#f2f2f2;
-text-align:center;
+    font-family: Arial, sans-serif;
+    margin:0;
+    background:#f0f0f5;
+    text-align:center;
 }
 
 header{
-background:#111;
-color:white;
-padding:20px;
-font-size:28px;
+    background:#111;
+    color:white;
+    padding:20px;
+    font-size:26px;
 }
 
 .subtitle{
-color:gray;
-margin-bottom:20px;
+    color:gray;
+    margin-bottom:15px;
 }
 
 .container{
-padding:20px;
+    padding:15px;
 }
 
 .card{
-background:white;
-padding:20px;
-margin:15px auto;
-max-width:400px;
-border-radius:10px;
-box-shadow:0 5px 10px rgba(0,0,0,0.1);
+    background:white;
+    padding:20px;
+    margin:15px auto;
+    max-width:400px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.15);
+    transition: transform 0.2s;
+}
+
+.card:hover{
+    transform: scale(1.02);
 }
 
 button{
-padding:15px 25px;
-border:none;
-border-radius:8px;
-font-size:18px;
-cursor:pointer;
-margin-top:10px;
+    padding:14px 25px;
+    border:none;
+    border-radius:10px;
+    font-size:18px;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+button:active{
+    transform: scale(0.95);
 }
 
 .sos{
-background:red;
-color:white;
-font-size:22px;
+    background:red;
+    color:white;
+    font-size:22px;
 }
 
 .alert{
-background:orange;
-color:white;
+    background:orange;
+    color:white;
 }
 
 .report{
-background:#007BFF;
-color:white;
+    background:#007BFF;
+    color:white;
 }
 
 .tip{
-background:#28a745;
-color:white;
+    background:#28a745;
+    color:white;
 }
 
 input{
-padding:10px;
-width:80%;
-margin:5px;
-border-radius:5px;
-border:1px solid #ccc;
+    padding:10px;
+    width:80%;
+    margin:5px;
+    border-radius:6px;
+    border:1px solid #ccc;
 }
-
 </style>
-
 </head>
 
 <body>
@@ -101,51 +105,70 @@ border:1px solid #ccc;
 
 <div class="card">
 <h2>Disaster Alerts</h2>
+<div id="alerts">
 <p>🌧 Flood warning in coastal areas</p>
 <p>🌪 Cyclone monitoring active</p>
 <p>🌍 Earthquake sensors active</p>
 </div>
+<button class="alert" onclick="generateRandomAlert()">Next Alert</button>
+</div>
 
 <div class="card">
 <h2>Nearby Safe Shelters</h2>
-<p>🏫 Government School Shelter</p>
-<p>🏥 Community Health Center</p>
-<p>🏟 Indoor Stadium Safe Zone</p>
+<ul id="shelters">
+<li>🏫 Government School Shelter</li>
+<li>🏥 Community Health Center</li>
+<li>🏟 Indoor Stadium Safe Zone</li>
+</ul>
 </div>
 
 <div class="card">
 <h2>Report Disaster</h2>
-
-<input type="text" placeholder="Disaster Type"><br>
-
-<input type="text" placeholder="Location"><br>
-
-<button class="report" onclick="report()">Submit Report</button>
-
+<input type="text" id="disasterType" placeholder="Disaster Type"><br>
+<input type="text" id="location" placeholder="Location"><br>
+<button class="report" onclick="submitReport()">Submit Report</button>
 </div>
 
 <div class="card">
 <h2>Safety Tips</h2>
-
-<p>✔ Stay calm during emergency</p>
+<p>✔ Stay calm during emergencies</p>
 <p>✔ Move to higher ground during floods</p>
-<p>✔ Follow evacuation instructions</p>
-
+<p>✔ Follow official evacuation routes</p>
 </div>
 
 </div>
 
 <script>
-
 function sendSOS(){
-alert("🚨 SOS ALERT SENT TO RESCUE TEAM!");
+    alert("🚨 SOS ALERT SENT TO RESCUE TEAM!");
 }
 
-function report(){
-alert("✅ Disaster Report Submitted!");
+const sampleAlerts = [
+    "🌧 Heavy rain in nearby areas",
+    "🌪 Cyclone approaching coast",
+    "🌍 Earthquake detected nearby",
+    "🔥 Forest fire warning",
+    "🌊 Flood alert near riverbank"
+];
+
+function generateRandomAlert(){
+    const randomIndex = Math.floor(Math.random() * sampleAlerts.length);
+    document.getElementById("alerts").innerHTML = `<p>${sampleAlerts[randomIndex]}</p>`;
 }
 
+function submitReport(){
+    const type = document.getElementById("disasterType").value;
+    const location = document.getElementById("location").value;
+    if(type && location){
+        alert(`✅ Disaster Report Submitted!\nType: ${type}\nLocation: ${location}`);
+        document.getElementById("disasterType").value = "";
+        document.getElementById("location").value = "";
+    }else{
+        alert("⚠️ Please fill all fields");
+    }
+}
 </script>
 
 </body>
 </html>
+
