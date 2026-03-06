@@ -171,10 +171,15 @@ border-radius:10px;
 <p id="voice"></p>
 
 <script>
+  var map = L.map('map').setView([20.5937, 78.9629], 5);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+maxZoom:19
+}).addTo(map);
 
 // MAP INITIALIZATION
 
-var map = L.map('map').setView([20.5937,78.9629],5);
+
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
 maxZoom:19
@@ -188,31 +193,6 @@ L.marker([17.6868,83.2185]).addTo(map)
 
 L.marker([17.7000,83.2000]).addTo(map)
 .bindPopup("Safe Shelter Location");
-
-
-// LOAD DISASTER ALERTS
-
-function loadDisasterAlerts(){
-
-const disasters = [
-{place:"Visakhapatnam",type:"Cyclone Warning"},
-{place:"Vijayawada",type:"Flood Alert"},
-{place:"Hyderabad",type:"Earthquake Risk"},
-{place:"Chennai",type:"Heavy Rain Alert"}
-];
-
-disasters.forEach(d => {
-
-var marker = L.marker([16.5 + Math.random(),80.6 + Math.random()]).addTo(map);
-
-marker.bindPopup("⚠️ Disaster Alert<br>"+d.type+"<br>"+d.place);
-
-});
-
-}
-
-loadDisasterAlerts();
-
 
 // WEATHER API
 
@@ -294,6 +274,10 @@ let reports=JSON.parse(localStorage.getItem("alertx"))||[];
 reports.push({type,location,desc});
 
 localStorage.setItem("alertx",JSON.stringify(reports));
+  // Add disaster marker to map
+var marker = L.marker([16.5 + Math.random(),80.6 + Math.random()]).addTo(map);
+
+marker.bindPopup("🚨 "+type+" reported at "+location);
 
 displayReports();
 
@@ -365,20 +349,68 @@ document.getElementById("meshmsg").innerHTML=
 }
 
 function checkZone(){
-document.getElementById("risk").innerHTML=
-"Warning: Flood-prone zone detected.";
+
+let floodZone = [17.6868,83.2185];
+
+var circle = L.circle(floodZone,{
+color:'red',
+radius:5000
+}).addTo(map);
+
+document.getElementById("risk").innerHTML =
+"Flood Risk Zone highlighted on map.";
+
 }
 
 function weather(){
-document.getElementById("weather").innerHTML=
-"Heavy rainfall expected.";
+async function weather(){
+
+try{
+
+let response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=16.5&longitude=80.6&current_weather=true");
+
+let data = await response.json();
+
+let w = data.current_weather;
+
+document.getElementById("weather").innerHTML =
+"Temperature: "+w.temperature+"°C <br> Wind Speed: "+w.windspeed+" km/h";
+
+}catch{
+
+document.getElementById("weather").innerHTML =
+"Unable to fetch weather data.";
+
 }
 
+}
+
+  let survival=false;
+
 function battery(){
+
+if(!survival){
+
 document.body.style.background="black";
 document.body.style.color="white";
-document.getElementById("battery").innerHTML=
-"Low battery survival mode activated.";
+
+document.getElementById("battery").innerHTML =
+"Low Battery Survival Mode ON";
+
+survival=true;
+
+}else{
+
+document.body.style.background="#eef2f5";
+document.body.style.color="black";
+
+document.getElementById("battery").innerHTML =
+"Low Battery Survival Mode OFF";
+
+survival=false;
+
+}
+
 }
 
 function rescue(){
@@ -387,11 +419,36 @@ document.getElementById("rescue").innerHTML=
 }
 
 function voice(){
-document.getElementById("voice").innerHTML=
-"Voice detection active. Say HELP.";
+
+const SpeechRecognition =
+window.SpeechRecognition || window.webkitSpeechRecognition;
+
+const recognition = new SpeechRecognition();
+
+recognition.onresult = function(event){
+
+let speech = event.results[0][0].transcript.toLowerCase();
+
+if(speech.includes("help")){
+
+sendSOS();
+
+document.getElementById("voice").innerHTML =
+"HELP detected. SOS triggered.";
+
+}
+
+};
+
+recognition.start();
+
+document.getElementById("voice").innerHTML =
+"Listening... Say HELP";
+
 }
 
 </script>
 
 </body>
 </html>
+
