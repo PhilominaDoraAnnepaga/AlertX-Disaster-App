@@ -224,7 +224,51 @@ function mesh(){document.getElementById("meshmsg").innerHTML="Distress signal sh
 function checkZone(){document.getElementById("risk").innerHTML="Warning: Flood-prone zone detected.";}
 function rescue(){document.getElementById("rescue").innerHTML="Help request sent to nearby users.";}
 function voice(){document.getElementById("voice").innerHTML="Voice detection active. Say HELP.";}
+// STEP 2: LIVE WEATHER & HEAT MAP + SAFE PLACES
+
+async function loadLiveWeatherAndHeatMap() {
+    try {
+        // Fetch real-time data from meteorological department API
+        let response = await fetch("YOUR_MET_DEPT_API_URL"); // Replace with real API
+        let data = await response.json();
+
+        // Example: data.disasters = [{lat:.., lon:.., type:"Flood", severity:...}, ...]
+        // Clear existing markers (except userMarker)
+        map.eachLayer(layer => {
+            if(layer instanceof L.Marker && layer != userMarker) map.removeLayer(layer);
+        });
+
+        // Add disaster markers dynamically
+        data.disasters.forEach(d => {
+            L.marker([d.lat, d.lon]).addTo(map)
+            .bindPopup(`⚠️ ${d.type}<br>Severity: ${d.severity}`);
+        });
+
+        // Add dynamic safe places
+        data.safePlaces.forEach(s => {
+            L.marker([s.lat, s.lon], {icon: L.icon({iconUrl:"https://cdn-icons-png.flaticon.com/512/190/190411.png",iconSize:[30,30]})})
+            .addTo(map)
+            .bindPopup(`🏠 ${s.name}`);
+        });
+
+        // Optional: update weather alerts section
+        if(data.weather){
+            document.getElementById("weather").innerHTML = 
+            `Temp: ${data.weather.temperature}°C | Wind: ${data.weather.windspeed} km/h`;
+        }
+
+    } catch(e){
+        console.log("Live weather/heat map load error:", e);
+    }
+}
+
+// Call the function after app loads
+loadLiveWeatherAndHeatMap();
+
+// Optional: auto-refresh every 5 mins
+setInterval(loadLiveWeatherAndHeatMap, 300000); // 300000 ms = 5 min
 </script>
 
 </body>
 </html>
+
