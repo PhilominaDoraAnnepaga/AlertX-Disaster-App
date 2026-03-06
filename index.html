@@ -172,8 +172,6 @@ border-radius:10px;
 
 <script>
 
-// MAP INITIALIZATION
-
 var map = L.map('map').setView([20.5937,78.9629],5);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
@@ -181,62 +179,17 @@ maxZoom:19
 }).addTo(map);
 
 
-// SAMPLE MARKERS
-
-L.marker([17.6868,83.2185]).addTo(map)
-.bindPopup("Flood Report - Vizag");
-
-L.marker([17.7000,83.2000]).addTo(map)
-.bindPopup("Safe Shelter Location");
+var userMarker;
 
 
-// LOAD DISASTER ALERTS
+// SOS
 
-function loadDisasterAlerts(){
+function sendSOS(){
 
-const disasters = [
-{place:"Visakhapatnam",type:"Cyclone Warning"},
-{place:"Vijayawada",type:"Flood Alert"},
-{place:"Hyderabad",type:"Earthquake Risk"},
-{place:"Chennai",type:"Heavy Rain Alert"}
-];
-
-disasters.forEach(d => {
-
-var marker = L.marker([16.5 + Math.random(),80.6 + Math.random()]).addTo(map);
-
-marker.bindPopup("⚠️ Disaster Alert<br>"+d.type+"<br>"+d.place);
-
-});
+document.getElementById("sosmsg").innerHTML=
+"SOS alert sent to rescue teams and nearby users.";
 
 }
-
-loadDisasterAlerts();
-
-
-// WEATHER API
-
-async function loadWeatherAlert(){
-
-try{
-
-let response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=16.5&longitude=80.6&current_weather=true");
-
-let data = await response.json();
-
-let weather = data.current_weather;
-
-alert("🌦️ Temp: "+weather.temperature+"°C | Wind: "+weather.windspeed+" km/h");
-
-}catch(e){
-
-console.log("Weather API error");
-
-}
-
-}
-
-loadWeatherAlert();
 
 
 // RESCUE DRONE
@@ -271,23 +224,18 @@ i++;
 }
 
 
-// SOS
-
-function sendSOS(){
-
-document.getElementById("sosmsg").innerHTML=
-"SOS alert sent to rescue teams and nearby users.";
-
-}
-
-
-// DATABASE
+// DATABASE REPORT
 
 function reportDisaster(){
 
 let type=document.getElementById("type").value;
 let location=document.getElementById("location").value;
 let desc=document.getElementById("desc").value;
+
+if(type=="" || location==""){
+alert("Enter disaster type and location");
+return;
+}
 
 let reports=JSON.parse(localStorage.getItem("alertx"))||[];
 
@@ -296,6 +244,8 @@ reports.push({type,location,desc});
 localStorage.setItem("alertx",JSON.stringify(reports));
 
 displayReports();
+
+addMarker(type,location);
 
 }
 
@@ -325,6 +275,20 @@ document.getElementById("reports").innerHTML=html;
 displayReports();
 
 
+// ADD MARKER
+
+function addMarker(type,location){
+
+var lat=16.5 + Math.random()/5;
+var lon=80.6 + Math.random()/5;
+
+var marker=L.marker([lat,lon]).addTo(map);
+
+marker.bindPopup("⚠ "+type+"<br>"+location);
+
+}
+
+
 // GPS
 
 function getLocation(){
@@ -341,11 +305,59 @@ document.getElementById("gps").innerHTML=
 
 map.setView([lat,lon],12);
 
-L.marker([lat,lon]).addTo(map)
-.bindPopup("📍 Your Location")
+if(userMarker){
+map.removeLayer(userMarker);
+}
+
+userMarker=L.marker([lat,lon]).addTo(map)
+.bindPopup("📍 Your Live Location")
 .openPopup();
 
 });
+
+}
+
+}
+
+
+// WEATHER
+
+async function weather(){
+
+let res=await fetch("https://api.open-meteo.com/v1/forecast?latitude=16.5&longitude=80.6&current_weather=true");
+
+let data=await res.json();
+
+let w=data.current_weather;
+
+document.getElementById("weather").innerHTML=
+"Temperature: "+w.temperature+"°C | Wind: "+w.windspeed+" km/h";
+
+}
+
+
+// LOW BATTERY MODE
+
+let batteryMode=false;
+
+function battery(){
+
+batteryMode=!batteryMode;
+
+if(batteryMode){
+
+document.body.style.background="black";
+document.body.style.color="white";
+
+document.getElementById("battery").innerHTML="Low battery survival mode ON";
+
+}
+else{
+
+document.body.style.background="#eef2f5";
+document.body.style.color="black";
+
+document.getElementById("battery").innerHTML="Low battery survival mode OFF";
 
 }
 
@@ -367,18 +379,6 @@ document.getElementById("meshmsg").innerHTML=
 function checkZone(){
 document.getElementById("risk").innerHTML=
 "Warning: Flood-prone zone detected.";
-}
-
-function weather(){
-document.getElementById("weather").innerHTML=
-"Heavy rainfall expected.";
-}
-
-function battery(){
-document.body.style.background="black";
-document.body.style.color="white";
-document.getElementById("battery").innerHTML=
-"Low battery survival mode activated.";
 }
 
 function rescue(){
