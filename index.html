@@ -229,7 +229,7 @@ function voice(){document.getElementById("voice").innerHTML="Voice detection act
 async function loadLiveWeatherAndHeatMap() {
     try {
         // Fetch real-time data from meteorological department API
-        let response = await fetch("YOUR_MET_DEPT_API_URL"); // Replace with real API
+        let response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=LAT&longitude=LON&current_weather=true"); // Replace with real API
         let data = await response.json();
 
         // Example: data.disasters = [{lat:.., lon:.., type:"Flood", severity:...}, ...]
@@ -271,4 +271,5 @@ setInterval(loadLiveWeatherAndHeatMap, 300000); // 300000 ms = 5 min
 
 </body>
 </html>
+
 
