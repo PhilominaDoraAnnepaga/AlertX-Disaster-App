@@ -307,11 +307,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).a
 // GPS
 var userMarker;
 
-// SOS
-function sendSOS(){
-document.getElementById("sosmsg").innerHTML="SOS alert sent to rescue teams and nearby users.";
-}
-
 // RESCUE DRONE
 function launchRescueDrone(){
 var drone = L.marker([16.506,80.648]).addTo(map);
