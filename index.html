@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,6 +38,127 @@ margin:5px;
 width:230px;
 }
 #map{height:400px;width:100%;border-radius:10px;}
+
+/* Bluetooth Mesh styles */
+.mesh-card{
+background:white;
+margin:10px 0;
+padding:20px;
+border-radius:12px;
+box-shadow:0 0 6px rgba(0,0,0,0.2);
+text-align:left;
+}
+.mesh-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:10px;
+}
+.mesh-header h2{color:#1565c0;}
+.mesh-header p{color:#64748b;}
+.mesh-status{
+padding:8px 12px;
+border-radius:20px;
+background:#dcfce7;
+color:#15803d;
+font-size:12px;
+font-weight:bold;
+}
+.mesh-status.offline{
+background:#fee2e2;
+color:#b91c1c;
+}
+.mesh-layout{
+display:flex;
+justify-content:space-around;
+align-items:center;
+flex-wrap:wrap;
+gap:20px;
+padding:15px 0;
+}
+.mesh-visual{
+width:220px;
+height:190px;
+position:relative;
+flex-shrink:0;
+}
+.mesh-node{
+position:absolute;
+width:42px;
+height:42px;
+border-radius:50%;
+background:#dbeafe;
+border:2px solid #2563eb;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:20px;
+z-index:2;
+}
+.main-node{
+left:87px;
+top:70px;
+width:48px;
+height:48px;
+background:#2563eb;
+}
+.node-a{left:5px;top:10px;}
+.node-b{right:5px;top:10px;}
+.node-c{left:87px;bottom:0;}
+.mesh-line{
+position:absolute;
+height:2px;
+background:#60a5fa;
+transform-origin:left center;
+z-index:1;
+}
+.line-a{
+width:95px;
+left:35px;
+top:42px;
+transform:rotate(40deg);
+}
+.line-b{
+width:95px;
+left:120px;
+top:78px;
+transform:rotate(-40deg);
+}
+.line-c{
+width:75px;
+left:110px;
+top:112px;
+transform:rotate(90deg);
+}
+.mesh-info{
+flex:1;
+min-width:240px;
+}
+.mesh-info p{line-height:1.6;color:#475569;}
+.mesh-message-box{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:10px;
+}
+.mesh-message-box input{
+flex:1;
+min-width:180px;
+width:auto;
+}
+.mesh-queue-item{
+background:#f1f5f9;
+padding:12px;
+border-radius:8px;
+margin:8px 0;
+overflow-wrap:anywhere;
+}
+.mesh-queue-item small{
+display:block;
+color:#64748b;
+margin-top:5px;
+}
 </style>
 </head>
 <body>
@@ -92,9 +214,73 @@ width:230px;
 
 <hr>
 
-<h2>Bluetooth Mesh Communication</h2>
-<button class="feature" onclick="mesh()">Send Distress Signal</button>
+<!-- REPLACED BLUETOOTH MESH SECTION -->
+<section class="mesh-card">
+
+<div class="mesh-header">
+<div>
+<h2>📡 Bluetooth Mesh</h2>
+<p>Resilient Emergency Communication Network</p>
+</div>
+
+<span id="meshStatus" class="mesh-status">● CONNECTED</span>
+</div>
+
+<div class="mesh-layout">
+
+<div class="mesh-visual">
+<div class="mesh-node main-node">🛡️</div>
+<div class="mesh-line line-a"></div>
+<div class="mesh-line line-b"></div>
+<div class="mesh-line line-c"></div>
+<div class="mesh-node node-a">📱</div>
+<div class="mesh-node node-b">📱</div>
+<div class="mesh-node node-c">📱</div>
+</div>
+
+<div class="mesh-info">
+<h3>Local Rescue Network</h3>
+
+<p>
+When internet or cellular connectivity is unavailable,
+emergency messages can be stored locally for later syncing.
+Actual Bluetooth mesh relaying requires additional implementation.
+</p>
+
+<button class="feature" onclick="toggleMeshNetwork()">
+📶 Simulate Network Failure
+</button>
+
+<button class="feature" onclick="scanMeshDevices()">
+🔵 Scan Nearby Devices
+</button>
+
+<p id="meshScanMsg"></p>
 <p id="meshmsg"></p>
+</div>
+
+</div>
+
+<div class="mesh-message-box">
+<input id="meshMessage" placeholder="Emergency message...">
+
+<button class="feature" onclick="queueMeshMessage()">
+➤ Queue Message
+</button>
+</div>
+
+<h3>Store-and-Forward Queue</h3>
+<div id="meshQueue"></div>
+
+<button id="meshSyncBtn"
+class="feature"
+onclick="syncMeshMessages()"
+style="display:none">
+🔄 Sync When Network Returns
+</button>
+
+</section>
+<!-- END BLUETOOTH MESH SECTION -->
 
 <hr>
 
@@ -218,42 +404,159 @@ document.body.style.color="black";
 document.getElementById("battery").innerHTML="Low battery survival mode OFF";}
 }
 
+// BLUETOOTH MESH FUNCTIONS
+let meshOffline=false;
+let meshQueue=JSON.parse(localStorage.getItem("alertxMeshQueue")||"[]");
+
+function renderMeshQueue(){
+const container=document.getElementById("meshQueue");
+container.innerHTML="";
+
+meshQueue.forEach((item,index)=>{
+const card=document.createElement("div");
+card.className="mesh-queue-item";
+
+const message=document.createElement("span");
+message.textContent=(index+1)+". "+item.text;
+
+const time=document.createElement("small");
+time.textContent="Saved: "+item.time;
+
+card.appendChild(message);
+card.appendChild(time);
+container.appendChild(card);
+});
+
+localStorage.setItem("alertxMeshQueue",JSON.stringify(meshQueue));
+
+document.getElementById("meshSyncBtn").style.display=
+!meshOffline && meshQueue.length>0 ? "inline-block":"none";
+}
+
+function toggleMeshNetwork(){
+meshOffline=!meshOffline;
+
+const status=document.getElementById("meshStatus");
+
+if(meshOffline){
+status.textContent="● OFFLINE";
+status.classList.add("offline");
+document.getElementById("meshmsg").textContent=
+"Network failure simulated. Messages will be queued locally.";
+}else{
+status.textContent="● CONNECTED";
+status.classList.remove("offline");
+document.getElementById("meshmsg").textContent=
+"Network restored in simulation. You can sync queued messages.";
+}
+
+renderMeshQueue();
+}
+
+async function scanMeshDevices(){
+const output=document.getElementById("meshScanMsg");
+
+if(!navigator.bluetooth){
+output.textContent=
+"Bluetooth scanning is not supported in this browser. Queue simulation is available.";
+return;
+}
+
+try{
+output.textContent="Select a Bluetooth device in the browser prompt.";
+
+const device=await navigator.bluetooth.requestDevice({
+acceptAllDevices:true
+});
+
+output.textContent="Selected device: "+
+(device.name||"Unnamed device")+
+". Device selection does not establish a mesh connection.";
+}catch(error){
+output.textContent="No device selected or Bluetooth scan cancelled.";
+}
+}
+
+function queueMeshMessage(){
+const input=document.getElementById("meshMessage");
+const text=input.value.trim();
+
+if(!text){
+alert("Please enter an emergency message.");
+return;
+}
+
+meshQueue.push({
+text:text,
+time:new Date().toLocaleTimeString()
+});
+
+input.value="";
+
+document.getElementById("meshmsg").textContent=
+"Emergency message saved in the local queue.";
+
+renderMeshQueue();
+}
+
+function syncMeshMessages(){
+if(meshOffline){
+alert("Reconnect the simulated network before syncing.");
+return;
+}
+
+if(meshQueue.length===0){
+alert("No messages to sync.");
+return;
+}
+
+const count=meshQueue.length;
+meshQueue=[];
+
+renderMeshQueue();
+
+document.getElementById("meshmsg").textContent=
+count+" message(s) cleared from the demo queue. No actual delivery was performed.";
+}
+
+renderMeshQueue();
+
 // OTHER FEATURES
 function showRoute(){document.getElementById("route").innerHTML="Suggested route → Government School Shelter (1.2km).";}
-function mesh(){document.getElementById("meshmsg").innerHTML="Distress signal shared via Bluetooth mesh.";}
 function checkZone(){document.getElementById("risk").innerHTML="Warning: Flood-prone zone detected.";}
 function rescue(){document.getElementById("rescue").innerHTML="Help request sent to nearby users.";}
 function voice(){document.getElementById("voice").innerHTML="Voice detection active. Say HELP.";}
-// STEP 2: LIVE WEATHER & HEAT MAP + SAFE PLACES
 
+// STEP 2: LIVE WEATHER & HEAT MAP + SAFE PLACES
 async function loadLiveWeatherAndHeatMap() {
     try {
-        // Fetch real-time data from meteorological department API
-        let response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=LAT&longitude=LON&current_weather=true"); // Replace with real API
+        let response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=LAT&longitude=LON&current_weather=true");
         let data = await response.json();
 
-        // Example: data.disasters = [{lat:.., lon:.., type:"Flood", severity:...}, ...]
-        // Clear existing markers (except userMarker)
         map.eachLayer(layer => {
             if(layer instanceof L.Marker && layer != userMarker) map.removeLayer(layer);
         });
 
-        // Add disaster markers dynamically
-        data.disasters.forEach(d => {
-            L.marker([d.lat, d.lon]).addTo(map)
-            .bindPopup(`⚠️ ${d.type}<br>Severity: ${d.severity}`);
-        });
+        if(data.disasters){
+            data.disasters.forEach(d => {
+                L.marker([d.lat, d.lon]).addTo(map)
+                .bindPopup(`⚠️ ${d.type}<br>Severity: ${d.severity}`);
+            });
+        }
 
-        // Add dynamic safe places
-        data.safePlaces.forEach(s => {
-            L.marker([s.lat, s.lon], {icon: L.icon({iconUrl:"https://cdn-icons-png.flaticon.com/512/190/190411.png",iconSize:[30,30]})})
-            .addTo(map)
-            .bindPopup(`🏠 ${s.name}`);
-        });
+        if(data.safePlaces){
+            data.safePlaces.forEach(s => {
+                L.marker([s.lat, s.lon], {
+                    icon: L.icon({
+                        iconUrl:"https://cdn-icons-png.flaticon.com/512/190/190411.png",
+                        iconSize:[30,30]
+                    })
+                }).addTo(map).bindPopup(`🏠 ${s.name}`);
+            });
+        }
 
-        // Optional: update weather alerts section
         if(data.weather){
-            document.getElementById("weather").innerHTML = 
+            document.getElementById("weather").innerHTML =
             `Temp: ${data.weather.temperature}°C | Wind: ${data.weather.windspeed} km/h`;
         }
 
@@ -262,14 +565,9 @@ async function loadLiveWeatherAndHeatMap() {
     }
 }
 
-// Call the function after app loads
 loadLiveWeatherAndHeatMap();
-
-// Optional: auto-refresh every 5 mins
-setInterval(loadLiveWeatherAndHeatMap, 300000); // 300000 ms = 5 min
+setInterval(loadLiveWeatherAndHeatMap,300000);
 </script>
 
 </body>
 </html>
-
-
