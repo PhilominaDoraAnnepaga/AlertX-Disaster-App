@@ -214,7 +214,7 @@ margin-top:5px;
 
 <hr>
 
-<!-- REPLACED BLUETOOTH MESH SECTION -->
+<!-- BLUETOOTH MESH -->
 <section class="mesh-card">
 
 <div class="mesh-header">
@@ -222,7 +222,6 @@ margin-top:5px;
 <h2>📡 Bluetooth Mesh</h2>
 <p>Resilient Emergency Communication Network</p>
 </div>
-
 <span id="meshStatus" class="mesh-status">● CONNECTED</span>
 </div>
 
@@ -240,11 +239,10 @@ margin-top:5px;
 
 <div class="mesh-info">
 <h3>Local Rescue Network</h3>
-
 <p>
-When internet or cellular connectivity is unavailable,
-emergency messages can be stored locally for later syncing.
-Actual Bluetooth mesh relaying requires additional implementation.
+Emergency messages can be stored locally when network
+connectivity is unavailable. Actual Bluetooth mesh relaying
+requires additional implementation.
 </p>
 
 <button class="feature" onclick="toggleMeshNetwork()">
@@ -263,24 +261,19 @@ Actual Bluetooth mesh relaying requires additional implementation.
 
 <div class="mesh-message-box">
 <input id="meshMessage" placeholder="Emergency message...">
-
-<button class="feature" onclick="queueMeshMessage()">
-➤ Queue Message
-</button>
+<button class="feature" onclick="queueMeshMessage()">➤ Queue Message</button>
 </div>
 
 <h3>Store-and-Forward Queue</h3>
 <div id="meshQueue"></div>
 
-<button id="meshSyncBtn"
-class="feature"
-onclick="syncMeshMessages()"
-style="display:none">
+<button id="meshSyncBtn" class="feature"
+onclick="syncMeshMessages()" style="display:none">
 🔄 Sync When Network Returns
 </button>
 
 </section>
-<!-- END BLUETOOTH MESH SECTION -->
+<!-- END BLUETOOTH MESH -->
 
 <hr>
 
@@ -305,12 +298,6 @@ style="display:none">
 <h2>Community Rescue Network</h2>
 <button class="feature" onclick="rescue()">Send Help Request</button>
 <p id="rescue"></p>
-
-<hr>
-
-<h2>Voice SOS</h2>
-<button class="feature" onclick="voice()">Activate Voice Detection</button>
-<p id="voice"></p>
 
 <script>
 // MAP
@@ -457,8 +444,7 @@ async function scanMeshDevices(){
 const output=document.getElementById("meshScanMsg");
 
 if(!navigator.bluetooth){
-output.textContent=
-"Bluetooth scanning is not supported in this browser. Queue simulation is available.";
+output.textContent="Bluetooth scanning is not supported by this browser.";
 return;
 }
 
@@ -525,7 +511,6 @@ renderMeshQueue();
 function showRoute(){document.getElementById("route").innerHTML="Suggested route → Government School Shelter (1.2km).";}
 function checkZone(){document.getElementById("risk").innerHTML="Warning: Flood-prone zone detected.";}
 function rescue(){document.getElementById("rescue").innerHTML="Help request sent to nearby users.";}
-function voice(){document.getElementById("voice").innerHTML="Voice detection active. Say HELP.";}
 
 // STEP 2: LIVE WEATHER & HEAT MAP + SAFE PLACES
 async function loadLiveWeatherAndHeatMap() {
