@@ -11,426 +11,364 @@
 
 <style>
 :root {
-  --bg: #f3f6fb;
-  --navy: #101c35;
-  --blue: #2864e8;
-  --red: #e53945;
-  --green: #169b72;
-  --muted: #7b879c;
-  --border: #e6ebf3;
-  --white: #fff;
+  --bg:#f3f6fb;
+  --navy:#101c35;
+  --blue:#2864e8;
+  --red:#e53945;
+  --green:#169b72;
+  --muted:#7b879c;
+  --border:#e6ebf3;
 }
-
-* { box-sizing: border-box; }
-
+* {box-sizing:border-box}
 body {
-  margin: 0;
-  font-family: Inter, "Segoe UI", Arial, sans-serif;
-  background: var(--bg);
-  color: #19243b;
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:var(--bg);
+  color:#19243b;
 }
-
-button, input, textarea { font: inherit; }
-
+button,input,textarea {font:inherit}
 button {
-  border: 0;
-  border-radius: 9px;
-  padding: 11px 16px;
-  cursor: pointer;
-  transition: .2s;
+  border:0;
+  border-radius:9px;
+  padding:11px 15px;
+  cursor:pointer;
 }
-
-button:hover { filter: brightness(.94); }
-
-input, textarea {
-  padding: 12px;
-  border: 1px solid #dce3ef;
-  border-radius: 8px;
-  max-width: 100%;
+button:hover {opacity:.9}
+input,textarea {
+  padding:12px;
+  border:1px solid #dce3ef;
+  border-radius:8px;
+  max-width:100%;
 }
-
-h1, h2, h3, p { margin-top: 0; }
-h2 { font-size: 19px; }
-small, .muted { color: var(--muted); }
-
-.app {
-  display: flex;
-  min-height: 100vh;
-}
+h1,h2,h3,p {margin-top:0}
+h2 {font-size:19px}
+small,.muted {color:var(--muted)}
+.app {display:flex;min-height:100vh}
 
 /* SIDEBAR */
 .sidebar {
-  width: 245px;
-  flex-shrink: 0;
-  background: var(--navy);
-  color: white;
-  padding: 26px 17px;
-  min-height: 100vh;
+  width:245px;
+  flex-shrink:0;
+  background:var(--navy);
+  color:white;
+  padding:25px 17px;
 }
-
 .brand {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 0 9px 30px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:0 8px 25px;
 }
-
 .brand-icon {
-  background: #e53945;
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  font-size: 23px;
+  background:var(--red);
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  font-size:23px;
 }
-
-.brand h2 { margin: 0; font-size: 22px; }
-.brand small { color: #9eabc4; }
-
+.brand h2 {margin:0;font-size:22px}
+.brand small {color:#aab8d0}
 .nav-label {
-  font-size: 10px;
-  color: #8291ad;
-  letter-spacing: 1.5px;
-  padding: 10px;
+  font-size:10px;
+  color:#8291ad;
+  letter-spacing:1.5px;
+  padding:10px;
 }
-
 .nav-link {
-  display: block;
-  color: #b7c3d9;
-  text-decoration: none;
-  padding: 13px 12px;
-  margin: 4px 0;
-  border-radius: 9px;
-  font-size: 14px;
+  display:block;
+  color:#b7c3d9;
+  text-decoration:none;
+  padding:13px 12px;
+  margin:4px 0;
+  border-radius:9px;
+  font-size:14px;
 }
-
-.nav-link:hover, .nav-link.active {
-  color: white;
-  background: #263755;
+.nav-link:hover,.nav-link.active {
+  color:white;
+  background:#263755;
 }
-
 .sidebar-bottom {
-  margin-top: 45px;
-  padding: 15px;
-  background: #1a2a47;
-  border-radius: 12px;
-  font-size: 12px;
-  line-height: 1.8;
+  margin-top:35px;
+  padding:15px;
+  background:#1a2a47;
+  border-radius:12px;
+  font-size:12px;
+  line-height:1.8;
 }
 
-/* MAIN CONTENT */
-.main {
-  flex: 1;
-  min-width: 0;
-}
-
+/* MAIN */
+.main {flex:1;min-width:0}
 .topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding: 22px 30px;
-  background: white;
-  border-bottom: 1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:22px 30px;
+  background:white;
+  border-bottom:1px solid var(--border);
 }
-
-.topbar h1 { font-size: 22px; margin: 0 0 5px; }
-.topbar p { margin: 0; color: var(--muted); font-size: 13px; }
-
+.topbar h1 {font-size:22px;margin-bottom:5px}
+.topbar p {margin:0;color:var(--muted);font-size:13px}
 .top-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #e7f7ef;
-  color: #14805b;
-  padding: 10px 13px;
-  border-radius: 30px;
-  font-size: 12px;
-  white-space: nowrap;
+  background:#e7f7ef;
+  color:#14805b;
+  padding:10px 13px;
+  border-radius:30px;
+  font-size:12px;
+  white-space:nowrap;
 }
-
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: currentColor;
-  display: inline-block;
-}
-
-.content { padding: 28px 30px; }
-
+.content {padding:28px 30px}
 .welcome {
-  background: linear-gradient(120deg, #152849, #2864e8);
-  color: white;
-  border-radius: 18px;
-  padding: 28px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 26px;
+  background:linear-gradient(120deg,#152849,#2864e8);
+  color:white;
+  border-radius:18px;
+  padding:28px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  margin-bottom:25px;
 }
-
-.welcome h2 { font-size: 25px; margin-bottom: 9px; }
-.welcome p { color: #d5e1ff; font-size: 14px; margin-bottom: 0; }
-.welcome-icon { font-size: 60px; }
-
+.welcome h2 {font-size:25px;margin-bottom:9px}
+.welcome p {color:#d5e1ff;font-size:14px}
+.welcome-icon {font-size:55px}
 .section-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  margin: 27px 0 15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin:25px 0 15px;
 }
-
-.section-heading h2 { margin: 0; }
-.section-heading small { font-size: 12px; }
-
+.section-heading h2 {margin:0}
 .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:15px;
 }
-
 .stat-card {
-  background: white;
-  padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  box-shadow: 0 3px 12px #182b4a08;
+  background:white;
+  padding:20px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:0 3px 12px #182b4a08;
 }
-
 .stat-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
 }
-
 .stat-icon {
-  width: 43px;
-  height: 43px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  font-size: 21px;
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  font-size:21px;
 }
-
-.stat-card h3 { font-size: 30px; margin: 19px 0 7px; }
-.stat-card p { font-size: 13px; color: var(--muted); margin: 0; }
-
-.blue-bg { background: #e9f0ff; }
-.red-bg { background: #ffebed; }
-.green-bg { background: #e2f8ef; }
-.orange-bg { background: #fff2df; }
+.stat-card h3 {font-size:28px;margin:18px 0 7px}
+.stat-card p {font-size:12px;color:var(--muted);margin:0}
+.blue-bg {background:#e9f0ff}
+.red-bg {background:#ffebed}
+.green-bg {background:#e2f8ef}
+.orange-bg {background:#fff2df}
 
 .dashboard-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr);
-  gap: 18px;
-  margin-top: 18px;
+  display:grid;
+  grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr);
+  gap:18px;
+  margin-top:20px;
 }
-
 .panel {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 18px;
-  box-shadow: 0 3px 12px #182b4a08;
-  scroll-margin-top: 20px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px;
+  margin-bottom:18px;
+  box-shadow:0 3px 12px #182b4a08;
+  scroll-margin-top:20px;
 }
-
-.panel h2 { margin-bottom: 7px; }
-.panel-subtitle { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
-
-#map { height: 340px; width: 100%; border-radius: 10px; z-index: 1; }
+.panel h2 {margin-bottom:7px}
+.panel-subtitle {color:var(--muted);font-size:12px;margin-bottom:18px}
+#map {height:340px;width:100%;border-radius:10px;z-index:1}
+.primary {background:var(--blue);color:white}
+.danger {background:var(--red);color:white}
+.success {background:var(--green);color:white}
 
 .quick-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
 }
-
 .quick-action {
-  border: 1px solid var(--border);
-  padding: 15px;
-  border-radius: 11px;
-  background: #fff;
-  text-align: left;
-  color: #23324c;
-  line-height: 1.7;
+  border:1px solid var(--border);
+  padding:14px;
+  border-radius:11px;
+  background:white;
+  text-align:left;
+  color:#23324c;
+  line-height:1.7;
 }
+.quick-action span {font-size:22px;display:block}
+.quick-action small {display:block}
+.quick-action:hover {background:#f3f6ff}
 
-.quick-action span { font-size: 23px; display: block; }
-.quick-action small { display: block; }
-.quick-action:hover { background: #f3f6ff; }
+.form-row {margin:12px 0}
+.form-row label {display:block;margin-bottom:6px;font-size:13px}
+.form-row input,.form-row textarea {width:100%}
+.form-row textarea {min-height:80px;resize:vertical}
 
-.primary { background: var(--blue); color: white; }
-.danger { background: var(--red); color: white; }
-.success { background: var(--green); color: white; }
+/* REPORTS */
+.report-item {
+  padding:15px;
+  background:#f8faff;
+  border:1px solid var(--border);
+  border-left:4px solid var(--red);
+  border-radius:9px;
+  margin:10px 0;
+  text-align:left;
+  overflow-wrap:anywhere;
+}
+.report-item .report-type {
+  font-size:16px;
+  font-weight:bold;
+  color:#19243b;
+}
+.report-item .report-area {
+  font-size:14px;
+  color:#586781;
+  margin-top:8px;
+}
+.empty-reports {
+  text-align:center;
+  padding:25px 10px;
+  color:var(--muted);
+  background:#f8faff;
+  border-radius:10px;
+  font-size:14px;
+}
 
 .feature-row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
 }
-
 .feature-tile {
-  border: 1px solid var(--border);
-  border-radius: 11px;
-  padding: 16px;
-  background: white;
+  border:1px solid var(--border);
+  border-radius:11px;
+  padding:16px;
+  background:white;
 }
-
-.feature-tile .emoji { font-size: 25px; }
-.feature-tile h3 { font-size: 14px; margin: 10px 0 7px; }
-.feature-tile p { font-size: 12px; color: var(--muted); line-height: 1.6; }
-
-.form-row { margin: 12px 0; }
-.form-row label { display: block; margin-bottom: 6px; font-size: 13px; }
-.form-row input, .form-row textarea { width: 100%; }
-.form-row textarea { min-height: 85px; resize: vertical; }
-
-.card {
-  background: white;
-  margin: 10px 0;
-  padding: 15px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  overflow-wrap: anywhere;
-  text-align: left;
-}
+.feature-tile .emoji {font-size:25px}
+.feature-tile h3 {font-size:14px;margin:10px 0 7px}
+.feature-tile p {font-size:12px;color:var(--muted);line-height:1.6}
+.feature-section {scroll-margin-top:20px;margin-bottom:24px}
 
 .mesh-card {
-  background: white;
-  padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  margin-bottom: 18px;
-  scroll-margin-top: 20px;
+  background:white;
+  padding:20px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  margin-bottom:18px;
 }
-
 .mesh-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
 }
-
-.mesh-header h2 { color: #1565c0; }
-.mesh-header p { color: var(--muted); }
-
+.mesh-header h2 {color:#1565c0}
+.mesh-header p {color:var(--muted)}
 .mesh-status {
-  padding: 8px 12px;
-  border-radius: 20px;
-  background: #dcfce7;
-  color: #15803d;
-  font-size: 12px;
-  font-weight: bold;
+  padding:8px 12px;
+  border-radius:20px;
+  background:#dcfce7;
+  color:#15803d;
+  font-size:12px;
+  font-weight:bold;
 }
-
-.mesh-status.offline { background: #fee2e2; color: #b91c1c; }
-
+.mesh-status.offline {background:#fee2e2;color:#b91c1c}
 .mesh-layout {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 15px 0;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:20px;
+  padding:15px 0;
 }
-
-.mesh-visual { width: 220px; height: 190px; position: relative; flex-shrink: 0; }
-
+.mesh-visual {width:220px;height:190px;position:relative;flex-shrink:0}
 .mesh-node {
-  position: absolute;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #dbeafe;
-  border: 2px solid #2563eb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  z-index: 2;
+  position:absolute;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:#dbeafe;
+  border:2px solid #2563eb;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  z-index:2;
 }
-
 .main-node {
-  left: 87px; top: 70px; width: 48px; height: 48px;
-  background: #2563eb;
+  left:87px;top:70px;width:48px;height:48px;background:#2563eb;
 }
-
-.node-a { left: 5px; top: 10px; }
-.node-b { right: 5px; top: 10px; }
-.node-c { left: 87px; bottom: 0; }
-
+.node-a {left:5px;top:10px}
+.node-b {right:5px;top:10px}
+.node-c {left:87px;bottom:0}
 .mesh-line {
-  position: absolute;
-  height: 2px;
-  background: #60a5fa;
-  transform-origin: left center;
+  position:absolute;
+  height:2px;
+  background:#60a5fa;
+  transform-origin:left center;
 }
-
-.line-a { width: 95px; left: 35px; top: 42px; transform: rotate(40deg); }
-.line-b { width: 95px; left: 120px; top: 78px; transform: rotate(-40deg); }
-.line-c { width: 75px; left: 110px; top: 112px; transform: rotate(90deg); }
-
-.mesh-info { flex: 1; min-width: 240px; }
-.mesh-info p { line-height: 1.6; color: #475569; }
-
-.mesh-message-box { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.mesh-message-box input { flex: 1; min-width: 180px; }
-
+.line-a {width:95px;left:35px;top:42px;transform:rotate(40deg)}
+.line-b {width:95px;left:120px;top:78px;transform:rotate(-40deg)}
+.line-c {width:75px;left:110px;top:112px;transform:rotate(90deg)}
+.mesh-info {flex:1;min-width:240px}
+.mesh-info p {line-height:1.6;color:#475569}
+.mesh-message-box {display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.mesh-message-box input {flex:1;min-width:180px}
 .mesh-queue-item {
-  background: #f1f5f9;
-  padding: 12px;
-  border-radius: 8px;
-  margin: 8px 0;
-  overflow-wrap: anywhere;
+  background:#f1f5f9;
+  padding:12px;
+  border-radius:8px;
+  margin:8px 0;
+  overflow-wrap:anywhere;
 }
-
-.mesh-queue-item small { display: block; margin-top: 5px; }
-
-.feature-section { scroll-margin-top: 20px; margin-bottom: 24px; }
-.feature-section > h2 { margin-bottom: 15px; }
-.inline-form { display: flex; flex-wrap: wrap; gap: 8px; }
-.inline-form input { flex: 1; min-width: 150px; }
-#reports .card { margin: 10px 0; }
-
+.mesh-queue-item small {display:block;margin-top:5px}
 .footer {
-  padding: 20px 30px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 12px;
+  padding:20px 30px;
+  border-top:1px solid var(--border);
+  color:var(--muted);
+  font-size:12px;
 }
 
-@media(max-width: 1050px) {
-  .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .dashboard-grid { grid-template-columns: 1fr; }
+@media(max-width:1050px) {
+  .stats-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dashboard-grid {grid-template-columns:1fr}
 }
-
-@media(max-width: 720px) {
-  .app { display: block; }
-  .sidebar { width: 100%; min-height: 0; padding: 15px; }
-  .brand { padding-bottom: 15px; }
-  .sidebar nav { display: flex; overflow-x: auto; gap: 5px; }
-  .nav-label, .sidebar-bottom { display: none; }
-  .nav-link { white-space: nowrap; padding: 10px; }
-  .topbar { padding: 18px; }
-  .topbar h1 { font-size: 18px; }
-  .content { padding: 17px; }
-  .welcome { padding: 22px; }
-  .welcome h2 { font-size: 21px; }
-  .welcome-icon { font-size: 38px; }
-  .stats-grid { gap: 10px; }
-  .stat-card { padding: 14px; }
-  .stat-card h3 { font-size: 25px; }
-  .feature-row { grid-template-columns: 1fr; }
-  .footer { padding: 18px; }
+@media(max-width:720px) {
+  .app {display:block}
+  .sidebar {width:100%;padding:15px}
+  .brand {padding-bottom:15px}
+  .sidebar nav {display:flex;overflow-x:auto;gap:5px}
+  .nav-label,.sidebar-bottom {display:none}
+  .nav-link {white-space:nowrap;padding:10px}
+  .topbar {padding:18px}
+  .topbar h1 {font-size:18px}
+  .content {padding:17px}
+  .welcome {padding:22px}
+  .welcome h2 {font-size:21px}
+  .welcome-icon {font-size:38px}
+  .stats-grid {gap:10px}
+  .stat-card {padding:13px}
+  .stat-card h3 {font-size:24px}
+  .feature-row {grid-template-columns:1fr}
+  .footer {padding:18px}
 }
 </style>
 </head>
@@ -438,7 +376,6 @@ small, .muted { color: var(--muted); }
 <body>
 <div class="app">
 
-<!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="brand">
     <div class="brand-icon">🚨</div>
@@ -461,11 +398,10 @@ small, .muted { color: var(--muted); }
   <div class="sidebar-bottom">
     <strong>🛡️ AlertX Protection</strong><br>
     Emergency response dashboard<br>
-    <span style="color:#9eabc4">Offline queue available locally</span>
+    <span style="color:#9eabc4">Local report storage enabled</span>
   </div>
 </aside>
 
-<!-- MAIN -->
 <main class="main">
 
 <header class="topbar">
@@ -473,27 +409,26 @@ small, .muted { color: var(--muted); }
     <h1>Disaster Response Dashboard</h1>
     <p>Monitor reports, location and emergency operations.</p>
   </div>
-  <div class="top-status" id="connectionStatus">
-    <span class="dot"></span> Online
-  </div>
+  <div class="top-status" id="connectionStatus">● Online</div>
 </header>
 
 <div class="content">
 
-<!-- DASHBOARD -->
 <section id="dashboard">
   <div class="welcome">
     <div>
       <h2>Welcome to AlertX 👋</h2>
       <p>One dashboard to monitor disaster reports and coordinate emergency response.</p>
-      <p style="margin-top:14px;font-size:12px">Stay informed. Respond faster. Help communities.</p>
+      <p style="margin-top:14px;font-size:12px">
+        Stay informed. Respond faster. Help communities.
+      </p>
     </div>
     <div class="welcome-icon">🛡️</div>
   </div>
 
   <div class="section-heading">
     <h2>System Overview</h2>
-    <small id="lastUpdated">Dashboard initialized</small>
+    <small id="lastUpdated"></small>
   </div>
 
   <div class="stats-grid">
@@ -503,7 +438,7 @@ small, .muted { color: var(--muted); }
         <div class="stat-icon blue-bg">📋</div>
       </div>
       <h3 id="totalReports">0</h3>
-      <p>Reports saved in this browser</p>
+      <p>Reports in this browser</p>
     </div>
 
     <div class="stat-card">
@@ -535,7 +470,6 @@ small, .muted { color: var(--muted); }
   </div>
 </section>
 
-<!-- MAP AND QUICK ACTIONS -->
 <div class="dashboard-grid">
 
   <section class="panel" id="live-map">
@@ -545,6 +479,7 @@ small, .muted { color: var(--muted); }
     <button class="primary" onclick="getLocation()" style="margin-top:13px">
       📍 Locate Me
     </button>
+    <p id="gps" style="margin-top:12px"></p>
   </section>
 
   <section class="panel">
@@ -557,7 +492,7 @@ small, .muted { color: var(--muted); }
         <small>Trigger demo alert</small>
       </button>
 
-      <button class="quick-action" onclick="document.getElementById('report-section').scrollIntoView({behavior:'smooth'})">
+      <button class="quick-action" onclick="goTo('report-section')">
         <span>📋</span><strong>Report Disaster</strong>
         <small>Submit an incident</small>
       </button>
@@ -574,7 +509,7 @@ small, .muted { color: var(--muted); }
 
       <button class="quick-action" onclick="toggleMeshNetwork()">
         <span>📡</span><strong>Network Mode</strong>
-        <small>Toggle mesh simulation</small>
+        <small>Toggle simulation</small>
       </button>
 
       <button class="quick-action" onclick="weather()">
@@ -588,19 +523,19 @@ small, .muted { color: var(--muted); }
 
 </div>
 
-<!-- RECENT REPORTS -->
-<section class="panel">
+<!-- RECENT REPORTS: ONLY USER-SUBMITTED TYPE AND AREA -->
+<section class="panel" id="recent-reports">
   <h2>📑 Recent Disaster Reports</h2>
-  <p class="panel-subtitle">Saved reports appear here automatically.</p>
-  <div id="dashboardReports">
-    <p class="muted">No reports submitted yet.</p>
-  </div>
+  <p class="panel-subtitle">
+    Displays only disaster types and areas submitted through this website in this browser.
+  </p>
+  <div id="dashboardReports"></div>
 </section>
 
 <!-- REPORT FORM -->
 <section class="panel feature-section" id="report-section">
   <h2>📝 Report a Disaster</h2>
-  <p class="panel-subtitle">Enter the incident details and save a report.</p>
+  <p class="panel-subtitle">Enter the actual disaster type and affected area.</p>
 
   <div class="form-row">
     <label for="type">Disaster Type</label>
@@ -608,13 +543,13 @@ small, .muted { color: var(--muted); }
   </div>
 
   <div class="form-row">
-    <label for="location">Location</label>
-    <input id="location" placeholder="Enter incident location">
+    <label for="location">Affected Area / Location</label>
+    <input id="location" placeholder="e.g. Vijayawada, Andhra Pradesh">
   </div>
 
   <div class="form-row">
-    <label for="desc">Description</label>
-    <textarea id="desc" placeholder="Describe the incident"></textarea>
+    <label for="desc">Description (optional)</label>
+    <textarea id="desc" placeholder="Additional information"></textarea>
   </div>
 
   <button class="primary" onclick="reportDisaster()">Submit Report</button>
@@ -639,20 +574,20 @@ small, .muted { color: var(--muted); }
     <div class="feature-tile">
       <span class="emoji">🏥</span>
       <h3>Safe Places</h3>
-      <p>Example shelter and emergency service locations.</p>
+      <p>Example shelters; locations are not verified.</p>
       <button class="primary" onclick="showSafePlaces()">Show Places</button>
     </div>
 
     <div class="feature-tile">
       <span class="emoji">🧭</span>
       <h3>Offline Navigation</h3>
-      <p>Display a sample safe-route suggestion.</p>
+      <p>Display a sample route suggestion.</p>
       <button class="primary" onclick="showRoute()">Find Route</button>
     </div>
   </div>
 
   <p id="route" style="margin-top:15px"></p>
-  <div id="safePlaceList" class="card">
+  <div id="safePlaceList" class="panel" style="margin-top:15px">
     <strong>Example Safe Places</strong>
     <ul>
       <li>Government School Shelter</li>
@@ -689,12 +624,10 @@ small, .muted { color: var(--muted); }
       <p>
         Messages can be stored locally when connectivity is unavailable.
         This interface simulates network failure and store-and-forward behavior.
-        Actual Bluetooth mesh relaying is not implemented by this demo.
+        Actual Bluetooth mesh relaying is not implemented.
       </p>
-
       <button class="primary" onclick="toggleMeshNetwork()">📶 Toggle Network</button>
       <button class="primary" onclick="scanMeshDevices()">🔵 Scan Bluetooth</button>
-
       <p id="meshScanMsg"></p>
       <p id="meshmsg"></p>
     </div>
@@ -707,7 +640,6 @@ small, .muted { color: var(--muted); }
 
   <h3 style="margin-top:24px">Store-and-Forward Queue</h3>
   <div id="meshQueue"></div>
-
   <button id="meshSyncBtn" class="primary" onclick="syncMeshMessages()" style="display:none">
     🔄 Clear Demo Queue
   </button>
@@ -722,7 +654,7 @@ small, .muted { color: var(--muted); }
     <div class="feature-tile">
       <span class="emoji">🌦️</span>
       <h3>Weather Monitoring</h3>
-      <p>Retrieve current weather from Open-Meteo for the configured sample coordinates.</p>
+      <p>Current weather for configured sample coordinates.</p>
       <button class="primary" onclick="weather()">Check Weather</button>
       <p id="weather" style="margin-top:12px"></p>
     </div>
@@ -730,7 +662,7 @@ small, .muted { color: var(--muted); }
     <div class="feature-tile">
       <span class="emoji">⚠️</span>
       <h3>Risk Zone</h3>
-      <p>Sample risk-zone alert for interface demonstration only.</p>
+      <p>Sample alert for demonstration only.</p>
       <button class="primary" onclick="checkZone()">Check Risk</button>
       <p id="risk" style="margin-top:12px"></p>
     </div>
@@ -738,17 +670,16 @@ small, .muted { color: var(--muted); }
     <div class="feature-tile">
       <span class="emoji">🔋</span>
       <h3>Survival Mode</h3>
-      <p>Toggle the low-distraction visual mode.</p>
+      <p>Toggle low-distraction visual mode.</p>
       <button class="primary" onclick="battery()">Toggle Mode</button>
       <p id="battery" style="margin-top:12px"></p>
     </div>
   </div>
 </section>
 
-<!-- COMMUNITY RESCUE -->
 <section class="panel feature-section">
   <h2>🤝 Community Rescue Network</h2>
-  <p class="panel-subtitle">Demonstration of a community help-request action.</p>
+  <p class="panel-subtitle">Demonstration help-request action.</p>
   <button class="danger" onclick="rescue()">Send Help Request</button>
   <p id="rescue" style="margin-top:15px"></p>
 </section>
@@ -757,19 +688,19 @@ small, .muted { color: var(--muted); }
 
 <footer class="footer">
   AlertX Disaster Response System · Academic prototype ·
-  Emergency actions and offline networking are simulated unless connected to real services.
+  Reports are stored in this browser only.
 </footer>
 
 </main>
 </div>
 
 <script>
-// MAP
-var map = L.map('map').setView([20.5937, 78.9629], 5);
+// MAP INITIALIZATION
+var map = L.map('map').setView([20.5937,78.9629],5);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  attribution: '&copy; OpenStreetMap contributors'
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  maxZoom:19,
+  attribution:'&copy; OpenStreetMap contributors'
 }).addTo(map);
 
 var userMarker;
@@ -779,22 +710,45 @@ var batteryMode = false;
 var sosTriggered = false;
 var gpsActive = false;
 
-// SAFE PLACES - EXAMPLE LABELS, NOT VERIFIED LIVE SHELTERS
+// DEMO LOCATIONS ONLY
 const safePlaces = [
-  {name: "Government School Shelter", lat: 16.506, lon: 80.648},
-  {name: "Community Hall Shelter", lat: 16.510, lon: 80.653},
-  {name: "Emergency Medical Camp", lat: 16.515, lon: 80.660},
-  {name: "Relief Distribution Center", lat: 16.520, lon: 80.665}
+  {name:"Government School Shelter",lat:16.506,lon:80.648},
+  {name:"Community Hall Shelter",lat:16.510,lon:80.653},
+  {name:"Emergency Medical Camp",lat:16.515,lon:80.660},
+  {name:"Relief Distribution Center",lat:16.520,lon:80.665}
 ];
 
-// DASHBOARD UPDATE
+// STORAGE KEY
+const REPORT_STORAGE_KEY = "alertx";
+
+function readReports() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(REPORT_STORAGE_KEY) || "[]");
+    return Array.isArray(saved) ? saved.filter(r =>
+      r &&
+      typeof r.type === "string" &&
+      typeof r.location === "string" &&
+      r.type.trim() !== "" &&
+      r.location.trim() !== ""
+    ) : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveReports(reports) {
+  localStorage.setItem(REPORT_STORAGE_KEY, JSON.stringify(reports));
+}
+
+// DASHBOARD
 function updateDashboard() {
-  const reports = JSON.parse(localStorage.getItem("alertx")) || [];
+  const reports = readReports();
 
   document.getElementById("totalReports").textContent = reports.length;
-  document.getElementById("sosCount").textContent = sosTriggered ? "Alert" : "Ready";
+  document.getElementById("sosCount").textContent =
+    sosTriggered ? "Alert" : "Ready";
   document.getElementById("sosStatusText").textContent =
-    sosTriggered ? "Demo SOS was triggered" : "SOS demo is ready";
+    sosTriggered ? "Demo SOS activated" : "SOS demo is ready";
 
   const online = navigator.onLine;
 
@@ -803,10 +757,10 @@ function updateDashboard() {
 
   document.getElementById("networkSubtext").textContent =
     meshOffline ? "Mesh simulation is offline" :
-    (online ? "Browser reports online" : "No internet connection detected");
+    (online ? "Browser reports online" : "No internet connection");
 
-  document.getElementById("connectionStatus").innerHTML =
-    '<span class="dot"></span> ' + (online ? "Online" : "No Internet");
+  document.getElementById("connectionStatus").textContent =
+    online ? "● Online" : "● No Internet";
 
   document.getElementById("gpsValue").textContent =
     gpsActive ? "Active" : "Inactive";
@@ -817,144 +771,136 @@ function updateDashboard() {
   document.getElementById("lastUpdated").textContent =
     "Updated " + new Date().toLocaleTimeString();
 
-  const recent = reports.slice(-3).reverse();
-  const dashboardReports = document.getElementById("dashboardReports");
+  renderRecentReports();
+}
 
-  if (!recent.length) {
-    dashboardReports.innerHTML = '<p class="muted">No reports submitted yet.</p>';
-  } else {
-    dashboardReports.innerHTML = "";
-    recent.forEach(r => {
-      const card = document.createElement("div");
-      card.className = "card";
+// CREATE REPORT ELEMENTS SAFELY
+function createReportElement(report) {
+  const card = document.createElement("div");
+  card.className = "report-item";
 
-      const title = document.createElement("strong");
-      title.textContent = "⚠️ " + r.type;
+  const type = document.createElement("div");
+  type.className = "report-type";
+  type.textContent = report.type;
 
-      const place = document.createElement("p");
-      place.style.margin = "8px 0 0";
-      place.textContent = "📍 " + r.location;
+  const area = document.createElement("div");
+  area.className = "report-area";
+  area.textContent = "📍 " + report.location;
 
-      const desc = document.createElement("p");
-      desc.style.margin = "8px 0 0";
-      desc.style.color = "#7b879c";
-      desc.textContent = r.desc || "No description provided.";
+  // Only disaster type and area are displayed.
+  card.appendChild(type);
+  card.appendChild(area);
 
-      card.append(title, place, desc);
-      dashboardReports.appendChild(card);
-    });
+  return card;
+}
+
+// RECENT REPORTS AND ALL REPORTS
+function renderRecentReports() {
+  const reports = readReports();
+  const recentContainer = document.getElementById("dashboardReports");
+  const allContainer = document.getElementById("reports");
+
+  recentContainer.replaceChildren();
+  allContainer.replaceChildren();
+
+  if (reports.length === 0) {
+    const emptyRecent = document.createElement("div");
+    emptyRecent.className = "empty-reports";
+    emptyRecent.textContent =
+      "No disaster reports yet. Submit a report to see it here.";
+
+    const emptyAll = document.createElement("div");
+    emptyAll.className = "empty-reports";
+    emptyAll.textContent = "No saved reports.";
+
+    recentContainer.appendChild(emptyRecent);
+    allContainer.appendChild(emptyAll);
+    return;
   }
+
+  // Newest reports first.
+  reports.slice().reverse().slice(0,5).forEach(report => {
+    recentContainer.appendChild(createReportElement(report));
+  });
+
+  reports.slice().reverse().forEach(report => {
+    allContainer.appendChild(createReportElement(report));
+  });
+}
+
+// SUBMIT REPORT
+function reportDisaster() {
+  const type = document.getElementById("type").value.trim();
+  const location = document.getElementById("location").value.trim();
+
+  if (!type || !location) {
+    alert("Please enter both disaster type and affected area.");
+    return;
+  }
+
+  // Store only the fields needed for the report display.
+  const reports = readReports();
+
+  reports.push({
+    type: type,
+    location: location
+  });
+
+  try {
+    saveReports(reports);
+  } catch (error) {
+    alert("Could not save the report. Browser storage may be full.");
+    return;
+  }
+
+  // Refresh both report sections and dashboard count.
+  renderRecentReports();
+  updateDashboard();
+
+  // Clear form fields after successful submission.
+  document.getElementById("type").value = "";
+  document.getElementById("location").value = "";
+  document.getElementById("desc").value = "";
+
+  // No fake map marker is added for a text-only area.
+  document.getElementById("recent-reports").scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+  });
 }
 
 // SOS DEMO
 function sendSOS() {
   sosTriggered = true;
-
   document.getElementById("sosmsg").textContent =
-    "⚠️ Demo SOS activated. No emergency services or contacts have been notified.";
-
+    "Demo SOS activated. No emergency services were notified.";
   updateDashboard();
 }
 
 // RESCUE DRONE DEMO
 function launchRescueDrone() {
   const path = [
-    [16.506, 80.648],
-    [16.508, 80.650],
-    [16.510, 80.653],
-    [16.512, 80.656]
+    [16.506,80.648],
+    [16.508,80.650],
+    [16.510,80.653],
+    [16.512,80.656]
   ];
 
   if (droneMarker) map.removeLayer(droneMarker);
 
   droneMarker = L.marker(path[0]).addTo(map);
   droneMarker.bindPopup("🚁 Rescue Drone Simulation").openPopup();
-
-  map.setView(path[0], 13);
+  map.setView(path[0],13);
 
   let i = 0;
-
-  const moveDrone = setInterval(() => {
+  const timer = setInterval(() => {
     if (i >= path.length) {
-      clearInterval(moveDrone);
+      clearInterval(timer);
       return;
     }
-
     droneMarker.setLatLng(path[i]);
     i++;
-  }, 1500);
-}
-
-// REPORT STORAGE
-function reportDisaster() {
-  const type = document.getElementById("type").value.trim();
-  const location = document.getElementById("location").value.trim();
-  const desc = document.getElementById("desc").value.trim();
-
-  if (!type || !location) {
-    alert("Enter disaster type and location.");
-    return;
-  }
-
-  const reports = JSON.parse(localStorage.getItem("alertx")) || [];
-  reports.push({
-    type: type,
-    location: location,
-    desc: desc,
-    time: new Date().toLocaleString()
-  });
-
-  localStorage.setItem("alertx", JSON.stringify(reports));
-
-  displayReports();
-  addMarker(type, location);
-  updateDashboard();
-
-  document.getElementById("type").value = "";
-  document.getElementById("location").value = "";
-  document.getElementById("desc").value = "";
-}
-
-function displayReports() {
-  const reports = JSON.parse(localStorage.getItem("alertx")) || [];
-  const container = document.getElementById("reports");
-  container.innerHTML = "";
-
-  if (!reports.length) {
-    container.innerHTML = '<p class="muted">No saved reports.</p>';
-    return;
-  }
-
-  reports.slice().reverse().forEach(r => {
-    const card = document.createElement("div");
-    card.className = "card";
-
-    const title = document.createElement("strong");
-    title.textContent = "Type: " + r.type;
-
-    const place = document.createElement("p");
-    place.textContent = "Location: " + r.location;
-
-    const desc = document.createElement("p");
-    desc.textContent = "Description: " + (r.desc || "Not provided");
-
-    const time = document.createElement("small");
-    time.textContent = r.time ? "Saved: " + r.time : "";
-
-    card.append(title, place, desc, time);
-    container.appendChild(card);
-  });
-}
-
-// REPORT MARKERS
-function addMarker(type, location) {
-  // Geocoding is not implemented. These are approximate demo coordinates.
-  const lat = 16.5 + Math.random() / 5;
-  const lon = 80.6 + Math.random() / 5;
-
-  const marker = L.marker([lat, lon]).addTo(map);
-  marker.bindPopup("⚠️ " + type + "<br>" + location);
-  reportMarkers.push(marker);
+  },1500);
 }
 
 // GPS
@@ -965,36 +911,36 @@ function getLocation() {
     return;
   }
 
-  document.getElementById("gpsSubtext").textContent = "Requesting permission...";
+  document.getElementById("gps").textContent =
+    "Requesting location permission...";
 
   navigator.geolocation.getCurrentPosition(
     function(pos) {
       const lat = pos.coords.latitude;
       const lon = pos.coords.longitude;
-
       gpsActive = true;
 
-      document.getElementById("gps").innerHTML =
+      document.getElementById("gps").textContent =
         "Latitude: " + lat.toFixed(6) +
-        "<br>Longitude: " + lon.toFixed(6);
+        " | Longitude: " + lon.toFixed(6);
 
-      map.setView([lat, lon], 13);
+      map.setView([lat,lon],13);
 
       if (userMarker) map.removeLayer(userMarker);
 
-      userMarker = L.marker([lat, lon]).addTo(map)
+      userMarker = L.marker([lat,lon]).addTo(map)
         .bindPopup("📍 Your Current Location")
         .openPopup();
 
       updateDashboard();
     },
-    function(error) {
-      gpsActive = false;
+    function() {
       document.getElementById("gps").textContent =
-        "Unable to retrieve location. Allow location permission and try again.";
+        "Location unavailable. Check browser permission and try again.";
+      gpsActive = false;
       updateDashboard();
     },
-    {enableHighAccuracy: true, timeout: 15000}
+    {enableHighAccuracy:true,timeout:15000}
   );
 }
 
@@ -1003,29 +949,22 @@ async function weather() {
   const output = document.getElementById("weather");
   output.textContent = "Loading weather...";
 
-  // Sample coordinates: Vijayawada area.
-  const lat = 16.506;
-  const lon = 80.648;
-
   try {
-    const url =
-      "https://api.open-meteo.com/v1/forecast?latitude=" +
-      lat + "&longitude=" + lon + "&current_weather=true";
+    const response = await fetch(
+      "https://api.open-meteo.com/v1/forecast?latitude=16.506&longitude=80.648&current_weather=true"
+    );
 
-    const response = await fetch(url);
     if (!response.ok) throw new Error("Weather request failed");
 
     const data = await response.json();
-
     if (!data.current_weather) throw new Error("Weather unavailable");
 
-    const w = data.current_weather;
-
     output.textContent =
-      "Vijayawada sample coordinates: " +
-      w.temperature + "°C · Wind " + w.windspeed + " km/h";
+      "Sample Vijayawada coordinates: " +
+      data.current_weather.temperature + "°C · Wind " +
+      data.current_weather.windspeed + " km/h";
   } catch (error) {
-    output.textContent = "Weather could not be loaded. Check your internet connection.";
+    output.textContent = "Weather unavailable. Check your internet connection.";
   }
 }
 
@@ -1037,7 +976,7 @@ function battery() {
     document.body.style.background = "#111827";
     document.body.style.color = "#f9fafb";
     document.getElementById("battery").textContent =
-      "Visual survival mode ON. This does not change actual device battery usage.";
+      "Visual survival mode ON. Actual battery usage is unchanged.";
   } else {
     document.body.style.background = "";
     document.body.style.color = "";
@@ -1048,13 +987,20 @@ function battery() {
 
 // BLUETOOTH MESH DEMO
 let meshOffline = false;
-let meshQueue = JSON.parse(localStorage.getItem("alertxMeshQueue") || "[]");
+let meshQueue;
+
+try {
+  meshQueue = JSON.parse(localStorage.getItem("alertxMeshQueue") || "[]");
+  if (!Array.isArray(meshQueue)) meshQueue = [];
+} catch (error) {
+  meshQueue = [];
+}
 
 function renderMeshQueue() {
   const container = document.getElementById("meshQueue");
-  container.innerHTML = "";
+  container.replaceChildren();
 
-  meshQueue.forEach((item, index) => {
+  meshQueue.forEach((item,index) => {
     const card = document.createElement("div");
     card.className = "mesh-queue-item";
 
@@ -1064,35 +1010,35 @@ function renderMeshQueue() {
     const time = document.createElement("small");
     time.textContent = "Saved: " + item.time;
 
-    card.append(message, time);
+    card.append(message,time);
     container.appendChild(card);
   });
 
-  if (!meshQueue.length) {
-    container.innerHTML = '<p class="muted">No queued messages.</p>';
+  if (meshQueue.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "No queued messages.";
+    container.appendChild(empty);
   }
 
-  localStorage.setItem("alertxMeshQueue", JSON.stringify(meshQueue));
+  localStorage.setItem("alertxMeshQueue",JSON.stringify(meshQueue));
 
   document.getElementById("meshSyncBtn").style.display =
-    !meshOffline && meshQueue.length > 0 ? "inline-block" : "none";
+    !meshOffline && meshQueue.length ? "inline-block" : "none";
 }
 
 function toggleMeshNetwork() {
   meshOffline = !meshOffline;
-
   const status = document.getElementById("meshStatus");
 
   if (meshOffline) {
     status.textContent = "● OFFLINE";
     status.classList.add("offline");
-
     document.getElementById("meshmsg").textContent =
       "Offline simulation active. Messages will be stored locally.";
   } else {
     status.textContent = "● CONNECTED";
     status.classList.remove("offline");
-
     document.getElementById("meshmsg").textContent =
       "Network simulation restored. Queue can be cleared.";
   }
@@ -1106,20 +1052,20 @@ async function scanMeshDevices() {
 
   if (!navigator.bluetooth) {
     output.textContent =
-      "Web Bluetooth is not supported in this browser or context. Try compatible Chrome on HTTPS.";
+      "Web Bluetooth is unavailable in this browser or context.";
     return;
   }
 
   try {
-    output.textContent = "Choose a device in the browser prompt.";
+    output.textContent = "Select a device in the browser prompt.";
 
     const device = await navigator.bluetooth.requestDevice({
-      acceptAllDevices: true
+      acceptAllDevices:true
     });
 
     output.textContent =
-      "Selected device: " + (device.name || "Unnamed device") +
-      ". Selection alone does not connect a mesh network.";
+      "Selected: " + (device.name || "Unnamed device") +
+      ". Selection does not establish a mesh connection.";
   } catch (error) {
     output.textContent = "Device selection cancelled or unavailable.";
   }
@@ -1127,22 +1073,21 @@ async function scanMeshDevices() {
 
 function queueMeshMessage() {
   const input = document.getElementById("meshMessage");
-  const text = input.value.trim();
+  const message = input.value.trim();
 
-  if (!text) {
-    alert("Please enter an emergency message.");
+  if (!message) {
+    alert("Enter an emergency message.");
     return;
   }
 
   meshQueue.push({
-    text: text,
-    time: new Date().toLocaleString()
+    text:message,
+    time:new Date().toLocaleString()
   });
 
   input.value = "";
-
   document.getElementById("meshmsg").textContent =
-    "Message saved to this browser's local queue.";
+    "Message saved in this browser's local queue.";
 
   renderMeshQueue();
 }
@@ -1166,56 +1111,61 @@ function syncMeshMessages() {
     count + " message(s) cleared from the demo queue. No delivery was performed.";
 }
 
-// SAFE PLACES
+// SAFE PLACES: EXAMPLE COORDINATES
 function showSafePlaces() {
   safePlaces.forEach(place => {
-    const marker = L.marker([place.lat, place.lon]).addTo(map);
-    marker.bindPopup("🏠 " + place.name + " (example location)");
+    L.marker([place.lat,place.lon]).addTo(map)
+      .bindPopup("🏠 " + place.name + " (example location)");
   });
 
-  map.setView([16.510, 80.653], 13);
-
+  map.setView([16.510,80.653],13);
   document.getElementById("safePlaceList").scrollIntoView({
-    behavior: "smooth",
-    block: "center"
+    behavior:"smooth",
+    block:"center"
   });
 }
 
-// ROUTE DEMO
+// SAMPLE ROUTE
 function showRoute() {
   document.getElementById("route").textContent =
-    "Sample route suggestion: Government School Shelter. Distance and safety are not verified.";
+    "Sample route suggestion: Government School Shelter. Route safety and distance are not verified.";
 }
 
-// RISK ZONE DEMO
+// SAMPLE RISK ALERT
 function checkZone() {
   document.getElementById("risk").textContent =
-    "Demo warning: flood-prone zone. No live disaster-risk feed is connected.";
+    "Demo warning only. No live disaster-risk feed is connected.";
 }
 
 // COMMUNITY RESCUE DEMO
 function rescue() {
   document.getElementById("rescue").textContent =
-    "Demo help request created locally. No nearby users or rescue services were notified.";
+    "Demo help request created locally. No rescue services were notified.";
 }
 
-// NAVIGATION ACTIVE STATE
+function goTo(id) {
+  document.getElementById(id).scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+  });
+}
+
+// SIDEBAR
 document.querySelectorAll(".nav-link").forEach(link => {
-  link.addEventListener("click", function() {
+  link.addEventListener("click",function() {
     document.querySelectorAll(".nav-link").forEach(item =>
       item.classList.remove("active")
     );
-
     this.classList.add("active");
   });
 });
 
-// CONNECTION STATUS
-window.addEventListener("online", updateDashboard);
-window.addEventListener("offline", updateDashboard);
+window.addEventListener("online",updateDashboard);
+window.addEventListener("offline",updateDashboard);
 
-// INITIALIZE
-displayReports();
+// INITIALIZE WITH EXISTING USER DATA ONLY.
+// NO DEFAULT DISASTER REPORTS ARE CREATED.
+renderRecentReports();
 renderMeshQueue();
 updateDashboard();
 </script>
