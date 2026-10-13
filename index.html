@@ -1,553 +1,1225 @@
-
+```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>AlertX Disaster Rescue System</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AlertX | Disaster Response Dashboard</title>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <style>
-body{
-font-family:Arial;
-background:#eef2f5;
-text-align:center;
-padding:20px;
+:root {
+  --bg: #f3f6fb;
+  --navy: #101c35;
+  --blue: #2864e8;
+  --red: #e53945;
+  --green: #169b72;
+  --muted: #7b879c;
+  --border: #e6ebf3;
+  --white: #fff;
 }
-h1{color:#d32f2f;}
-button{
-padding:12px 20px;
-margin:8px;
-border:none;
-border-radius:8px;
-font-size:15px;
-cursor:pointer;
-}
-.sos{background:red;color:white;}
-.feature{background:#1976d2;color:white;}
-.card{
-background:white;
-margin:10px;
-padding:15px;
-border-radius:10px;
-box-shadow:0 0 6px rgba(0,0,0,0.2);
-}
-input,textarea{
-padding:8px;
-margin:5px;
-width:230px;
-}
-#map{height:400px;width:100%;border-radius:10px;}
 
-/* Bluetooth Mesh styles */
-.mesh-card{
-background:white;
-margin:10px 0;
-padding:20px;
-border-radius:12px;
-box-shadow:0 0 6px rgba(0,0,0,0.2);
-text-align:left;
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: #19243b;
 }
-.mesh-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-flex-wrap:wrap;
-gap:10px;
+
+button, input, textarea { font: inherit; }
+
+button {
+  border: 0;
+  border-radius: 9px;
+  padding: 11px 16px;
+  cursor: pointer;
+  transition: .2s;
 }
-.mesh-header h2{color:#1565c0;}
-.mesh-header p{color:#64748b;}
-.mesh-status{
-padding:8px 12px;
-border-radius:20px;
-background:#dcfce7;
-color:#15803d;
-font-size:12px;
-font-weight:bold;
+
+button:hover { filter: brightness(.94); }
+
+input, textarea {
+  padding: 12px;
+  border: 1px solid #dce3ef;
+  border-radius: 8px;
+  max-width: 100%;
 }
-.mesh-status.offline{
-background:#fee2e2;
-color:#b91c1c;
+
+h1, h2, h3, p { margin-top: 0; }
+h2 { font-size: 19px; }
+small, .muted { color: var(--muted); }
+
+.app {
+  display: flex;
+  min-height: 100vh;
 }
-.mesh-layout{
-display:flex;
-justify-content:space-around;
-align-items:center;
-flex-wrap:wrap;
-gap:20px;
-padding:15px 0;
+
+/* SIDEBAR */
+.sidebar {
+  width: 245px;
+  flex-shrink: 0;
+  background: var(--navy);
+  color: white;
+  padding: 26px 17px;
+  min-height: 100vh;
 }
-.mesh-visual{
-width:220px;
-height:190px;
-position:relative;
-flex-shrink:0;
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 9px 30px;
 }
-.mesh-node{
-position:absolute;
-width:42px;
-height:42px;
-border-radius:50%;
-background:#dbeafe;
-border:2px solid #2563eb;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:20px;
-z-index:2;
+
+.brand-icon {
+  background: #e53945;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  font-size: 23px;
 }
-.main-node{
-left:87px;
-top:70px;
-width:48px;
-height:48px;
-background:#2563eb;
+
+.brand h2 { margin: 0; font-size: 22px; }
+.brand small { color: #9eabc4; }
+
+.nav-label {
+  font-size: 10px;
+  color: #8291ad;
+  letter-spacing: 1.5px;
+  padding: 10px;
 }
-.node-a{left:5px;top:10px;}
-.node-b{right:5px;top:10px;}
-.node-c{left:87px;bottom:0;}
-.mesh-line{
-position:absolute;
-height:2px;
-background:#60a5fa;
-transform-origin:left center;
-z-index:1;
+
+.nav-link {
+  display: block;
+  color: #b7c3d9;
+  text-decoration: none;
+  padding: 13px 12px;
+  margin: 4px 0;
+  border-radius: 9px;
+  font-size: 14px;
 }
-.line-a{
-width:95px;
-left:35px;
-top:42px;
-transform:rotate(40deg);
+
+.nav-link:hover, .nav-link.active {
+  color: white;
+  background: #263755;
 }
-.line-b{
-width:95px;
-left:120px;
-top:78px;
-transform:rotate(-40deg);
+
+.sidebar-bottom {
+  margin-top: 45px;
+  padding: 15px;
+  background: #1a2a47;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 1.8;
 }
-.line-c{
-width:75px;
-left:110px;
-top:112px;
-transform:rotate(90deg);
+
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  min-width: 0;
 }
-.mesh-info{
-flex:1;
-min-width:240px;
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 30px;
+  background: white;
+  border-bottom: 1px solid var(--border);
 }
-.mesh-info p{line-height:1.6;color:#475569;}
-.mesh-message-box{
-display:flex;
-flex-wrap:wrap;
-gap:8px;
-margin-top:10px;
+
+.topbar h1 { font-size: 22px; margin: 0 0 5px; }
+.topbar p { margin: 0; color: var(--muted); font-size: 13px; }
+
+.top-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #e7f7ef;
+  color: #14805b;
+  padding: 10px 13px;
+  border-radius: 30px;
+  font-size: 12px;
+  white-space: nowrap;
 }
-.mesh-message-box input{
-flex:1;
-min-width:180px;
-width:auto;
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  display: inline-block;
 }
-.mesh-queue-item{
-background:#f1f5f9;
-padding:12px;
-border-radius:8px;
-margin:8px 0;
-overflow-wrap:anywhere;
+
+.content { padding: 28px 30px; }
+
+.welcome {
+  background: linear-gradient(120deg, #152849, #2864e8);
+  color: white;
+  border-radius: 18px;
+  padding: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 26px;
 }
-.mesh-queue-item small{
-display:block;
-color:#64748b;
-margin-top:5px;
+
+.welcome h2 { font-size: 25px; margin-bottom: 9px; }
+.welcome p { color: #d5e1ff; font-size: 14px; margin-bottom: 0; }
+.welcome-icon { font-size: 60px; }
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin: 27px 0 15px;
+}
+
+.section-heading h2 { margin: 0; }
+.section-heading small { font-size: 12px; }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 3px 12px #182b4a08;
+}
+
+.stat-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-icon {
+  width: 43px;
+  height: 43px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 21px;
+}
+
+.stat-card h3 { font-size: 30px; margin: 19px 0 7px; }
+.stat-card p { font-size: 13px; color: var(--muted); margin: 0; }
+
+.blue-bg { background: #e9f0ff; }
+.red-bg { background: #ffebed; }
+.green-bg { background: #e2f8ef; }
+.orange-bg { background: #fff2df; }
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr);
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.panel {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 12px #182b4a08;
+  scroll-margin-top: 20px;
+}
+
+.panel h2 { margin-bottom: 7px; }
+.panel-subtitle { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+
+#map { height: 340px; width: 100%; border-radius: 10px; z-index: 1; }
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.quick-action {
+  border: 1px solid var(--border);
+  padding: 15px;
+  border-radius: 11px;
+  background: #fff;
+  text-align: left;
+  color: #23324c;
+  line-height: 1.7;
+}
+
+.quick-action span { font-size: 23px; display: block; }
+.quick-action small { display: block; }
+.quick-action:hover { background: #f3f6ff; }
+
+.primary { background: var(--blue); color: white; }
+.danger { background: var(--red); color: white; }
+.success { background: var(--green); color: white; }
+
+.feature-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.feature-tile {
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 16px;
+  background: white;
+}
+
+.feature-tile .emoji { font-size: 25px; }
+.feature-tile h3 { font-size: 14px; margin: 10px 0 7px; }
+.feature-tile p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+.form-row { margin: 12px 0; }
+.form-row label { display: block; margin-bottom: 6px; font-size: 13px; }
+.form-row input, .form-row textarea { width: 100%; }
+.form-row textarea { min-height: 85px; resize: vertical; }
+
+.card {
+  background: white;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+
+.mesh-card {
+  background: white;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 18px;
+  scroll-margin-top: 20px;
+}
+
+.mesh-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mesh-header h2 { color: #1565c0; }
+.mesh-header p { color: var(--muted); }
+
+.mesh-status {
+  padding: 8px 12px;
+  border-radius: 20px;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.mesh-status.offline { background: #fee2e2; color: #b91c1c; }
+
+.mesh-layout {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 15px 0;
+}
+
+.mesh-visual { width: 220px; height: 190px; position: relative; flex-shrink: 0; }
+
+.mesh-node {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #dbeafe;
+  border: 2px solid #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  z-index: 2;
+}
+
+.main-node {
+  left: 87px; top: 70px; width: 48px; height: 48px;
+  background: #2563eb;
+}
+
+.node-a { left: 5px; top: 10px; }
+.node-b { right: 5px; top: 10px; }
+.node-c { left: 87px; bottom: 0; }
+
+.mesh-line {
+  position: absolute;
+  height: 2px;
+  background: #60a5fa;
+  transform-origin: left center;
+}
+
+.line-a { width: 95px; left: 35px; top: 42px; transform: rotate(40deg); }
+.line-b { width: 95px; left: 120px; top: 78px; transform: rotate(-40deg); }
+.line-c { width: 75px; left: 110px; top: 112px; transform: rotate(90deg); }
+
+.mesh-info { flex: 1; min-width: 240px; }
+.mesh-info p { line-height: 1.6; color: #475569; }
+
+.mesh-message-box { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.mesh-message-box input { flex: 1; min-width: 180px; }
+
+.mesh-queue-item {
+  background: #f1f5f9;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+
+.mesh-queue-item small { display: block; margin-top: 5px; }
+
+.feature-section { scroll-margin-top: 20px; margin-bottom: 24px; }
+.feature-section > h2 { margin-bottom: 15px; }
+.inline-form { display: flex; flex-wrap: wrap; gap: 8px; }
+.inline-form input { flex: 1; min-width: 150px; }
+#reports .card { margin: 10px 0; }
+
+.footer {
+  padding: 20px 30px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media(max-width: 1050px) {
+  .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dashboard-grid { grid-template-columns: 1fr; }
+}
+
+@media(max-width: 720px) {
+  .app { display: block; }
+  .sidebar { width: 100%; min-height: 0; padding: 15px; }
+  .brand { padding-bottom: 15px; }
+  .sidebar nav { display: flex; overflow-x: auto; gap: 5px; }
+  .nav-label, .sidebar-bottom { display: none; }
+  .nav-link { white-space: nowrap; padding: 10px; }
+  .topbar { padding: 18px; }
+  .topbar h1 { font-size: 18px; }
+  .content { padding: 17px; }
+  .welcome { padding: 22px; }
+  .welcome h2 { font-size: 21px; }
+  .welcome-icon { font-size: 38px; }
+  .stats-grid { gap: 10px; }
+  .stat-card { padding: 14px; }
+  .stat-card h3 { font-size: 25px; }
+  .feature-row { grid-template-columns: 1fr; }
+  .footer { padding: 18px; }
 }
 </style>
 </head>
+
 <body>
+<div class="app">
 
-<h1>🚨 AlertX Disaster Management App</h1>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">🚨</div>
+    <div>
+      <h2>AlertX</h2>
+      <small>Disaster Response System</small>
+    </div>
+  </div>
 
-<button class="sos" onclick="sendSOS()">🚨 SOS EMERGENCY</button>
-<button class="feature" onclick="launchRescueDrone()">🚁 Launch Rescue Drone</button>
+  <div class="nav-label">WORKSPACE</div>
+  <nav>
+    <a class="nav-link active" href="#dashboard">▦ Dashboard</a>
+    <a class="nav-link" href="#live-map">◎ Live Map</a>
+    <a class="nav-link" href="#report-section">＋ Report Disaster</a>
+    <a class="nav-link" href="#mesh-section">◉ Bluetooth Mesh</a>
+    <a class="nav-link" href="#rescue-section">✚ Rescue Operations</a>
+    <a class="nav-link" href="#monitoring">⌁ Monitoring</a>
+  </nav>
 
-<p id="sosmsg"></p>
+  <div class="sidebar-bottom">
+    <strong>🛡️ AlertX Protection</strong><br>
+    Emergency response dashboard<br>
+    <span style="color:#9eabc4">Offline queue available locally</span>
+  </div>
+</aside>
 
-<hr>
+<!-- MAIN -->
+<main class="main">
 
-<h2>Report Disaster</h2>
-<input id="type" placeholder="Disaster Type"><br>
-<input id="location" placeholder="Location"><br>
-<textarea id="desc" placeholder="Description"></textarea><br>
-<button class="feature" onclick="reportDisaster()">Submit Report</button>
+<header class="topbar">
+  <div>
+    <h1>Disaster Response Dashboard</h1>
+    <p>Monitor reports, location and emergency operations.</p>
+  </div>
+  <div class="top-status" id="connectionStatus">
+    <span class="dot"></span> Online
+  </div>
+</header>
 
-<hr>
+<div class="content">
 
-<h2>Saved Disaster Reports </h2>
-<div id="reports"></div>
+<!-- DASHBOARD -->
+<section id="dashboard">
+  <div class="welcome">
+    <div>
+      <h2>Welcome to AlertX 👋</h2>
+      <p>One dashboard to monitor disaster reports and coordinate emergency response.</p>
+      <p style="margin-top:14px;font-size:12px">Stay informed. Respond faster. Help communities.</p>
+    </div>
+    <div class="welcome-icon">🛡️</div>
+  </div>
 
-<hr>
+  <div class="section-heading">
+    <h2>System Overview</h2>
+    <small id="lastUpdated">Dashboard initialized</small>
+  </div>
 
-<h2>GPS Tracking</h2>
-<button class="feature" onclick="getLocation()">Get My Location</button>
-<p id="gps"></p>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="muted">Disaster Reports</span>
+        <div class="stat-icon blue-bg">📋</div>
+      </div>
+      <h3 id="totalReports">0</h3>
+      <p>Reports saved in this browser</p>
+    </div>
 
-<hr>
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="muted">Emergency Status</span>
+        <div class="stat-icon red-bg">🚨</div>
+      </div>
+      <h3 id="sosCount">Ready</h3>
+      <p id="sosStatusText">SOS demo is ready</p>
+    </div>
 
-<h2>Live Disaster Map</h2>
-<div id="map"></div>
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="muted">Network Status</span>
+        <div class="stat-icon green-bg">📡</div>
+      </div>
+      <h3 id="networkValue">Online</h3>
+      <p id="networkSubtext">Browser network status</p>
+    </div>
 
-<hr>
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="muted">GPS Tracking</span>
+        <div class="stat-icon orange-bg">📍</div>
+      </div>
+      <h3 id="gpsValue">Inactive</h3>
+      <p id="gpsSubtext">Location not requested</p>
+    </div>
+  </div>
+</section>
 
-<h2>Safe Places</h2>
-<div class="card">
-<ul>
-<li>Government School Shelter</li>
-<li>Community Hall Shelter</li>
-<li>Emergency Medical Camp</li>
-<li>Relief Distribution Center</li>
-</ul>
+<!-- MAP AND QUICK ACTIONS -->
+<div class="dashboard-grid">
+
+  <section class="panel" id="live-map">
+    <h2>🗺️ Live Disaster Map</h2>
+    <p class="panel-subtitle">Your location and submitted report markers</p>
+    <div id="map"></div>
+    <button class="primary" onclick="getLocation()" style="margin-top:13px">
+      📍 Locate Me
+    </button>
+  </section>
+
+  <section class="panel">
+    <h2>⚡ Quick Actions</h2>
+    <p class="panel-subtitle">Access emergency tools quickly</p>
+
+    <div class="quick-grid">
+      <button class="quick-action" onclick="sendSOS()">
+        <span>🚨</span><strong>Emergency SOS</strong>
+        <small>Trigger demo alert</small>
+      </button>
+
+      <button class="quick-action" onclick="document.getElementById('report-section').scrollIntoView({behavior:'smooth'})">
+        <span>📋</span><strong>Report Disaster</strong>
+        <small>Submit an incident</small>
+      </button>
+
+      <button class="quick-action" onclick="launchRescueDrone()">
+        <span>🚁</span><strong>Rescue Drone</strong>
+        <small>Simulate flight</small>
+      </button>
+
+      <button class="quick-action" onclick="getLocation()">
+        <span>📍</span><strong>My Location</strong>
+        <small>Request GPS access</small>
+      </button>
+
+      <button class="quick-action" onclick="toggleMeshNetwork()">
+        <span>📡</span><strong>Network Mode</strong>
+        <small>Toggle mesh simulation</small>
+      </button>
+
+      <button class="quick-action" onclick="weather()">
+        <span>🌦️</span><strong>Weather</strong>
+        <small>Fetch weather data</small>
+      </button>
+    </div>
+
+    <p id="sosmsg" style="margin-top:15px;line-height:1.6"></p>
+  </section>
+
 </div>
 
-<hr>
+<!-- RECENT REPORTS -->
+<section class="panel">
+  <h2>📑 Recent Disaster Reports</h2>
+  <p class="panel-subtitle">Saved reports appear here automatically.</p>
+  <div id="dashboardReports">
+    <p class="muted">No reports submitted yet.</p>
+  </div>
+</section>
 
-<h2>Offline Navigation</h2>
-<button class="feature" onclick="showRoute()">Find Safe Route</button>
-<p id="route"></p>
+<!-- REPORT FORM -->
+<section class="panel feature-section" id="report-section">
+  <h2>📝 Report a Disaster</h2>
+  <p class="panel-subtitle">Enter the incident details and save a report.</p>
 
-<hr>
+  <div class="form-row">
+    <label for="type">Disaster Type</label>
+    <input id="type" placeholder="e.g. Flood, Cyclone, Earthquake">
+  </div>
+
+  <div class="form-row">
+    <label for="location">Location</label>
+    <input id="location" placeholder="Enter incident location">
+  </div>
+
+  <div class="form-row">
+    <label for="desc">Description</label>
+    <textarea id="desc" placeholder="Describe the incident"></textarea>
+  </div>
+
+  <button class="primary" onclick="reportDisaster()">Submit Report</button>
+
+  <h3 style="margin-top:25px">All Saved Reports</h3>
+  <div id="reports"></div>
+</section>
+
+<!-- RESCUE OPERATIONS -->
+<section class="panel feature-section" id="rescue-section">
+  <h2>🚁 Rescue Operations</h2>
+  <p class="panel-subtitle">Tools for the disaster response demonstration.</p>
+
+  <div class="feature-row">
+    <div class="feature-tile">
+      <span class="emoji">🚁</span>
+      <h3>Rescue Drone</h3>
+      <p>Animate a sample rescue drone path on the map.</p>
+      <button class="primary" onclick="launchRescueDrone()">Launch Demo</button>
+    </div>
+
+    <div class="feature-tile">
+      <span class="emoji">🏥</span>
+      <h3>Safe Places</h3>
+      <p>Example shelter and emergency service locations.</p>
+      <button class="primary" onclick="showSafePlaces()">Show Places</button>
+    </div>
+
+    <div class="feature-tile">
+      <span class="emoji">🧭</span>
+      <h3>Offline Navigation</h3>
+      <p>Display a sample safe-route suggestion.</p>
+      <button class="primary" onclick="showRoute()">Find Route</button>
+    </div>
+  </div>
+
+  <p id="route" style="margin-top:15px"></p>
+  <div id="safePlaceList" class="card">
+    <strong>Example Safe Places</strong>
+    <ul>
+      <li>Government School Shelter</li>
+      <li>Community Hall Shelter</li>
+      <li>Emergency Medical Camp</li>
+      <li>Relief Distribution Center</li>
+    </ul>
+  </div>
+</section>
 
 <!-- BLUETOOTH MESH -->
-<section class="mesh-card">
+<section class="mesh-card feature-section" id="mesh-section">
+  <div class="mesh-header">
+    <div>
+      <h2>📡 Bluetooth Mesh</h2>
+      <p>Resilient Emergency Communication Network</p>
+    </div>
+    <span id="meshStatus" class="mesh-status">● CONNECTED</span>
+  </div>
 
-<div class="mesh-header">
-<div>
-<h2>📡 Bluetooth Mesh</h2>
-<p>Resilient Emergency Communication Network</p>
-</div>
-<span id="meshStatus" class="mesh-status">● CONNECTED</span>
-</div>
+  <div class="mesh-layout">
+    <div class="mesh-visual">
+      <div class="mesh-node main-node">🛡️</div>
+      <div class="mesh-line line-a"></div>
+      <div class="mesh-line line-b"></div>
+      <div class="mesh-line line-c"></div>
+      <div class="mesh-node node-a">📱</div>
+      <div class="mesh-node node-b">📱</div>
+      <div class="mesh-node node-c">📱</div>
+    </div>
 
-<div class="mesh-layout">
+    <div class="mesh-info">
+      <h3>Local Rescue Network</h3>
+      <p>
+        Messages can be stored locally when connectivity is unavailable.
+        This interface simulates network failure and store-and-forward behavior.
+        Actual Bluetooth mesh relaying is not implemented by this demo.
+      </p>
 
-<div class="mesh-visual">
-<div class="mesh-node main-node">🛡️</div>
-<div class="mesh-line line-a"></div>
-<div class="mesh-line line-b"></div>
-<div class="mesh-line line-c"></div>
-<div class="mesh-node node-a">📱</div>
-<div class="mesh-node node-b">📱</div>
-<div class="mesh-node node-c">📱</div>
-</div>
+      <button class="primary" onclick="toggleMeshNetwork()">📶 Toggle Network</button>
+      <button class="primary" onclick="scanMeshDevices()">🔵 Scan Bluetooth</button>
 
-<div class="mesh-info">
-<h3>Local Rescue Network</h3>
-<p>
-Emergency messages can be stored locally when network
-connectivity is unavailable. Actual Bluetooth mesh relaying
-requires additional implementation.
-</p>
+      <p id="meshScanMsg"></p>
+      <p id="meshmsg"></p>
+    </div>
+  </div>
 
-<button class="feature" onclick="toggleMeshNetwork()">
-📶 Simulate Network Failure
-</button>
+  <div class="mesh-message-box">
+    <input id="meshMessage" placeholder="Enter emergency message...">
+    <button class="primary" onclick="queueMeshMessage()">➤ Queue Message</button>
+  </div>
 
-<button class="feature" onclick="scanMeshDevices()">
-🔵 Scan Nearby Devices
-</button>
+  <h3 style="margin-top:24px">Store-and-Forward Queue</h3>
+  <div id="meshQueue"></div>
 
-<p id="meshScanMsg"></p>
-<p id="meshmsg"></p>
-</div>
-
-</div>
-
-<div class="mesh-message-box">
-<input id="meshMessage" placeholder="Emergency message...">
-<button class="feature" onclick="queueMeshMessage()">➤ Queue Message</button>
-</div>
-
-<h3>Store-and-Forward Queue</h3>
-<div id="meshQueue"></div>
-
-<button id="meshSyncBtn" class="feature"
-onclick="syncMeshMessages()" style="display:none">
-🔄 Sync When Network Returns
-</button>
-
+  <button id="meshSyncBtn" class="primary" onclick="syncMeshMessages()" style="display:none">
+    🔄 Clear Demo Queue
+  </button>
 </section>
-<!-- END BLUETOOTH MESH -->
 
-<hr>
+<!-- MONITORING -->
+<section class="panel feature-section" id="monitoring">
+  <h2>📊 Monitoring & Alerts</h2>
+  <p class="panel-subtitle">Weather, risk and device survival indicators.</p>
 
-<h2>Disaster Heat Map</h2>
-<button class="feature" onclick="checkZone()">Check Risk Zone</button>
-<p id="risk"></p>
+  <div class="feature-row">
+    <div class="feature-tile">
+      <span class="emoji">🌦️</span>
+      <h3>Weather Monitoring</h3>
+      <p>Retrieve current weather from Open-Meteo for the configured sample coordinates.</p>
+      <button class="primary" onclick="weather()">Check Weather</button>
+      <p id="weather" style="margin-top:12px"></p>
+    </div>
 
-<hr>
+    <div class="feature-tile">
+      <span class="emoji">⚠️</span>
+      <h3>Risk Zone</h3>
+      <p>Sample risk-zone alert for interface demonstration only.</p>
+      <button class="primary" onclick="checkZone()">Check Risk</button>
+      <p id="risk" style="margin-top:12px"></p>
+    </div>
 
-<h2>Weather Alerts</h2>
-<button class="feature" onclick="weather()">Check Weather Alert</button>
-<p id="weather"></p>
+    <div class="feature-tile">
+      <span class="emoji">🔋</span>
+      <h3>Survival Mode</h3>
+      <p>Toggle the low-distraction visual mode.</p>
+      <button class="primary" onclick="battery()">Toggle Mode</button>
+      <p id="battery" style="margin-top:12px"></p>
+    </div>
+  </div>
+</section>
 
-<hr>
+<!-- COMMUNITY RESCUE -->
+<section class="panel feature-section">
+  <h2>🤝 Community Rescue Network</h2>
+  <p class="panel-subtitle">Demonstration of a community help-request action.</p>
+  <button class="danger" onclick="rescue()">Send Help Request</button>
+  <p id="rescue" style="margin-top:15px"></p>
+</section>
 
-<h2>Low Battery Survival Mode</h2>
-<button class="feature" onclick="battery()">Activate Survival Mode</button>
-<p id="battery"></p>
+</div>
 
-<hr>
+<footer class="footer">
+  AlertX Disaster Response System · Academic prototype ·
+  Emergency actions and offline networking are simulated unless connected to real services.
+</footer>
 
-<h2>Community Rescue Network</h2>
-<button class="feature" onclick="rescue()">Send Help Request</button>
-<p id="rescue"></p>
+</main>
+</div>
 
 <script>
 // MAP
-var map = L.map('map').setView([20.5937,78.9629],5);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
+var map = L.map('map').setView([20.5937, 78.9629], 5);
 
-// GPS
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
 var userMarker;
+var reportMarkers = [];
+var droneMarker;
+var batteryMode = false;
+var sosTriggered = false;
+var gpsActive = false;
 
-// RESCUE DRONE
-function launchRescueDrone(){
-var drone = L.marker([16.506,80.648]).addTo(map);
-drone.bindPopup("🚁 Rescue Drone Launched").openPopup();
-var path=[[16.506,80.648],[16.508,80.650],[16.510,80.653],[16.512,80.656]];
-var i=0;
-var moveDrone=setInterval(()=>{
-if(i>=path.length){clearInterval(moveDrone);return;}
-drone.setLatLng(path[i]); i++;
-},1500);
+// SAFE PLACES - EXAMPLE LABELS, NOT VERIFIED LIVE SHELTERS
+const safePlaces = [
+  {name: "Government School Shelter", lat: 16.506, lon: 80.648},
+  {name: "Community Hall Shelter", lat: 16.510, lon: 80.653},
+  {name: "Emergency Medical Camp", lat: 16.515, lon: 80.660},
+  {name: "Relief Distribution Center", lat: 16.520, lon: 80.665}
+];
+
+// DASHBOARD UPDATE
+function updateDashboard() {
+  const reports = JSON.parse(localStorage.getItem("alertx")) || [];
+
+  document.getElementById("totalReports").textContent = reports.length;
+  document.getElementById("sosCount").textContent = sosTriggered ? "Alert" : "Ready";
+  document.getElementById("sosStatusText").textContent =
+    sosTriggered ? "Demo SOS was triggered" : "SOS demo is ready";
+
+  const online = navigator.onLine;
+
+  document.getElementById("networkValue").textContent =
+    meshOffline ? "Offline" : (online ? "Online" : "Offline");
+
+  document.getElementById("networkSubtext").textContent =
+    meshOffline ? "Mesh simulation is offline" :
+    (online ? "Browser reports online" : "No internet connection detected");
+
+  document.getElementById("connectionStatus").innerHTML =
+    '<span class="dot"></span> ' + (online ? "Online" : "No Internet");
+
+  document.getElementById("gpsValue").textContent =
+    gpsActive ? "Active" : "Inactive";
+
+  document.getElementById("gpsSubtext").textContent =
+    gpsActive ? "Location retrieved" : "Location not requested";
+
+  document.getElementById("lastUpdated").textContent =
+    "Updated " + new Date().toLocaleTimeString();
+
+  const recent = reports.slice(-3).reverse();
+  const dashboardReports = document.getElementById("dashboardReports");
+
+  if (!recent.length) {
+    dashboardReports.innerHTML = '<p class="muted">No reports submitted yet.</p>';
+  } else {
+    dashboardReports.innerHTML = "";
+    recent.forEach(r => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const title = document.createElement("strong");
+      title.textContent = "⚠️ " + r.type;
+
+      const place = document.createElement("p");
+      place.style.margin = "8px 0 0";
+      place.textContent = "📍 " + r.location;
+
+      const desc = document.createElement("p");
+      desc.style.margin = "8px 0 0";
+      desc.style.color = "#7b879c";
+      desc.textContent = r.desc || "No description provided.";
+
+      card.append(title, place, desc);
+      dashboardReports.appendChild(card);
+    });
+  }
 }
 
-// DATABASE REPORT
-function reportDisaster(){
-let type=document.getElementById("type").value;
-let location=document.getElementById("location").value;
-let desc=document.getElementById("desc").value;
-if(type=="" || location==""){alert("Enter disaster type and location"); return;}
+// SOS DEMO
+function sendSOS() {
+  sosTriggered = true;
 
-let reports=JSON.parse(localStorage.getItem("alertx"))||[];
-reports.push({type,location,desc});
-localStorage.setItem("alertx",JSON.stringify(reports));
-displayReports();
-addMarker(type,location);
+  document.getElementById("sosmsg").textContent =
+    "⚠️ Demo SOS activated. No emergency services or contacts have been notified.";
+
+  updateDashboard();
 }
 
-function displayReports(){
-let reports=JSON.parse(localStorage.getItem("alertx"))||[];
-let html="";
-for(let r of reports){
-html+=`<div class="card"><b>Type:</b> ${r.type}<br><b>Location:</b> ${r.location}<br><b>Description:</b> ${r.desc}</div>`;
-}
-document.getElementById("reports").innerHTML=html;
+// RESCUE DRONE DEMO
+function launchRescueDrone() {
+  const path = [
+    [16.506, 80.648],
+    [16.508, 80.650],
+    [16.510, 80.653],
+    [16.512, 80.656]
+  ];
+
+  if (droneMarker) map.removeLayer(droneMarker);
+
+  droneMarker = L.marker(path[0]).addTo(map);
+  droneMarker.bindPopup("🚁 Rescue Drone Simulation").openPopup();
+
+  map.setView(path[0], 13);
+
+  let i = 0;
+
+  const moveDrone = setInterval(() => {
+    if (i >= path.length) {
+      clearInterval(moveDrone);
+      return;
+    }
+
+    droneMarker.setLatLng(path[i]);
+    i++;
+  }, 1500);
 }
 
-// ONLY USER MARKER
-function addMarker(type,location){
-var lat=16.5 + Math.random()/5;
-var lon=80.6 + Math.random()/5;
-var marker=L.marker([lat,lon]).addTo(map);
-marker.bindPopup("⚠ "+type+"<br>"+location);
+// REPORT STORAGE
+function reportDisaster() {
+  const type = document.getElementById("type").value.trim();
+  const location = document.getElementById("location").value.trim();
+  const desc = document.getElementById("desc").value.trim();
+
+  if (!type || !location) {
+    alert("Enter disaster type and location.");
+    return;
+  }
+
+  const reports = JSON.parse(localStorage.getItem("alertx")) || [];
+  reports.push({
+    type: type,
+    location: location,
+    desc: desc,
+    time: new Date().toLocaleString()
+  });
+
+  localStorage.setItem("alertx", JSON.stringify(reports));
+
+  displayReports();
+  addMarker(type, location);
+  updateDashboard();
+
+  document.getElementById("type").value = "";
+  document.getElementById("location").value = "";
+  document.getElementById("desc").value = "";
+}
+
+function displayReports() {
+  const reports = JSON.parse(localStorage.getItem("alertx")) || [];
+  const container = document.getElementById("reports");
+  container.innerHTML = "";
+
+  if (!reports.length) {
+    container.innerHTML = '<p class="muted">No saved reports.</p>';
+    return;
+  }
+
+  reports.slice().reverse().forEach(r => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const title = document.createElement("strong");
+    title.textContent = "Type: " + r.type;
+
+    const place = document.createElement("p");
+    place.textContent = "Location: " + r.location;
+
+    const desc = document.createElement("p");
+    desc.textContent = "Description: " + (r.desc || "Not provided");
+
+    const time = document.createElement("small");
+    time.textContent = r.time ? "Saved: " + r.time : "";
+
+    card.append(title, place, desc, time);
+    container.appendChild(card);
+  });
+}
+
+// REPORT MARKERS
+function addMarker(type, location) {
+  // Geocoding is not implemented. These are approximate demo coordinates.
+  const lat = 16.5 + Math.random() / 5;
+  const lon = 80.6 + Math.random() / 5;
+
+  const marker = L.marker([lat, lon]).addTo(map);
+  marker.bindPopup("⚠️ " + type + "<br>" + location);
+  reportMarkers.push(marker);
 }
 
 // GPS
-function getLocation(){
-if(navigator.geolocation){
-navigator.geolocation.getCurrentPosition(function(pos){
-let lat=pos.coords.latitude;
-let lon=pos.coords.longitude;
-document.getElementById("gps").innerHTML="Latitude: "+lat+"<br>Longitude: "+lon;
-map.setView([lat,lon],12);
-if(userMarker){map.removeLayer(userMarker);}
-userMarker=L.marker([lat,lon]).addTo(map).bindPopup("📍 Your Live Location").openPopup();
-});
-}
+function getLocation() {
+  if (!navigator.geolocation) {
+    document.getElementById("gps").textContent =
+      "Geolocation is not supported by this browser.";
+    return;
+  }
+
+  document.getElementById("gpsSubtext").textContent = "Requesting permission...";
+
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+
+      gpsActive = true;
+
+      document.getElementById("gps").innerHTML =
+        "Latitude: " + lat.toFixed(6) +
+        "<br>Longitude: " + lon.toFixed(6);
+
+      map.setView([lat, lon], 13);
+
+      if (userMarker) map.removeLayer(userMarker);
+
+      userMarker = L.marker([lat, lon]).addTo(map)
+        .bindPopup("📍 Your Current Location")
+        .openPopup();
+
+      updateDashboard();
+    },
+    function(error) {
+      gpsActive = false;
+      document.getElementById("gps").textContent =
+        "Unable to retrieve location. Allow location permission and try again.";
+      updateDashboard();
+    },
+    {enableHighAccuracy: true, timeout: 15000}
+  );
 }
 
 // WEATHER
-async function weather(){
-let res=await fetch("https://api.open-meteo.com/v1/forecast?latitude=16.5&longitude=80.6&current_weather=true");
-let data=await res.json();
-let w=data.current_weather;
-document.getElementById("weather").innerHTML="Temperature: "+w.temperature+"°C | Wind: "+w.windspeed+" km/h";
+async function weather() {
+  const output = document.getElementById("weather");
+  output.textContent = "Loading weather...";
+
+  // Sample coordinates: Vijayawada area.
+  const lat = 16.506;
+  const lon = 80.648;
+
+  try {
+    const url =
+      "https://api.open-meteo.com/v1/forecast?latitude=" +
+      lat + "&longitude=" + lon + "&current_weather=true";
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Weather request failed");
+
+    const data = await response.json();
+
+    if (!data.current_weather) throw new Error("Weather unavailable");
+
+    const w = data.current_weather;
+
+    output.textContent =
+      "Vijayawada sample coordinates: " +
+      w.temperature + "°C · Wind " + w.windspeed + " km/h";
+  } catch (error) {
+    output.textContent = "Weather could not be loaded. Check your internet connection.";
+  }
 }
 
-// LOW BATTERY MODE
-let batteryMode=false;
-function battery(){
-batteryMode=!batteryMode;
-if(batteryMode){
-document.body.style.background="black";
-document.body.style.color="white";
-document.getElementById("battery").innerHTML="Low battery survival mode ON";}
-else{
-document.body.style.background="#eef2f5";
-document.body.style.color="black";
-document.getElementById("battery").innerHTML="Low battery survival mode OFF";}
+// SURVIVAL MODE
+function battery() {
+  batteryMode = !batteryMode;
+
+  if (batteryMode) {
+    document.body.style.background = "#111827";
+    document.body.style.color = "#f9fafb";
+    document.getElementById("battery").textContent =
+      "Visual survival mode ON. This does not change actual device battery usage.";
+  } else {
+    document.body.style.background = "";
+    document.body.style.color = "";
+    document.getElementById("battery").textContent =
+      "Visual survival mode OFF.";
+  }
 }
 
-// BLUETOOTH MESH FUNCTIONS
-let meshOffline=false;
-let meshQueue=JSON.parse(localStorage.getItem("alertxMeshQueue")||"[]");
+// BLUETOOTH MESH DEMO
+let meshOffline = false;
+let meshQueue = JSON.parse(localStorage.getItem("alertxMeshQueue") || "[]");
 
-function renderMeshQueue(){
-const container=document.getElementById("meshQueue");
-container.innerHTML="";
+function renderMeshQueue() {
+  const container = document.getElementById("meshQueue");
+  container.innerHTML = "";
 
-meshQueue.forEach((item,index)=>{
-const card=document.createElement("div");
-card.className="mesh-queue-item";
+  meshQueue.forEach((item, index) => {
+    const card = document.createElement("div");
+    card.className = "mesh-queue-item";
 
-const message=document.createElement("span");
-message.textContent=(index+1)+". "+item.text;
+    const message = document.createElement("span");
+    message.textContent = (index + 1) + ". " + item.text;
 
-const time=document.createElement("small");
-time.textContent="Saved: "+item.time;
+    const time = document.createElement("small");
+    time.textContent = "Saved: " + item.time;
 
-card.appendChild(message);
-card.appendChild(time);
-container.appendChild(card);
+    card.append(message, time);
+    container.appendChild(card);
+  });
+
+  if (!meshQueue.length) {
+    container.innerHTML = '<p class="muted">No queued messages.</p>';
+  }
+
+  localStorage.setItem("alertxMeshQueue", JSON.stringify(meshQueue));
+
+  document.getElementById("meshSyncBtn").style.display =
+    !meshOffline && meshQueue.length > 0 ? "inline-block" : "none";
+}
+
+function toggleMeshNetwork() {
+  meshOffline = !meshOffline;
+
+  const status = document.getElementById("meshStatus");
+
+  if (meshOffline) {
+    status.textContent = "● OFFLINE";
+    status.classList.add("offline");
+
+    document.getElementById("meshmsg").textContent =
+      "Offline simulation active. Messages will be stored locally.";
+  } else {
+    status.textContent = "● CONNECTED";
+    status.classList.remove("offline");
+
+    document.getElementById("meshmsg").textContent =
+      "Network simulation restored. Queue can be cleared.";
+  }
+
+  renderMeshQueue();
+  updateDashboard();
+}
+
+async function scanMeshDevices() {
+  const output = document.getElementById("meshScanMsg");
+
+  if (!navigator.bluetooth) {
+    output.textContent =
+      "Web Bluetooth is not supported in this browser or context. Try compatible Chrome on HTTPS.";
+    return;
+  }
+
+  try {
+    output.textContent = "Choose a device in the browser prompt.";
+
+    const device = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true
+    });
+
+    output.textContent =
+      "Selected device: " + (device.name || "Unnamed device") +
+      ". Selection alone does not connect a mesh network.";
+  } catch (error) {
+    output.textContent = "Device selection cancelled or unavailable.";
+  }
+}
+
+function queueMeshMessage() {
+  const input = document.getElementById("meshMessage");
+  const text = input.value.trim();
+
+  if (!text) {
+    alert("Please enter an emergency message.");
+    return;
+  }
+
+  meshQueue.push({
+    text: text,
+    time: new Date().toLocaleString()
+  });
+
+  input.value = "";
+
+  document.getElementById("meshmsg").textContent =
+    "Message saved to this browser's local queue.";
+
+  renderMeshQueue();
+}
+
+function syncMeshMessages() {
+  if (meshOffline) {
+    alert("Restore the simulated network first.");
+    return;
+  }
+
+  if (!meshQueue.length) {
+    alert("No queued messages.");
+    return;
+  }
+
+  const count = meshQueue.length;
+  meshQueue = [];
+  renderMeshQueue();
+
+  document.getElementById("meshmsg").textContent =
+    count + " message(s) cleared from the demo queue. No delivery was performed.";
+}
+
+// SAFE PLACES
+function showSafePlaces() {
+  safePlaces.forEach(place => {
+    const marker = L.marker([place.lat, place.lon]).addTo(map);
+    marker.bindPopup("🏠 " + place.name + " (example location)");
+  });
+
+  map.setView([16.510, 80.653], 13);
+
+  document.getElementById("safePlaceList").scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
+// ROUTE DEMO
+function showRoute() {
+  document.getElementById("route").textContent =
+    "Sample route suggestion: Government School Shelter. Distance and safety are not verified.";
+}
+
+// RISK ZONE DEMO
+function checkZone() {
+  document.getElementById("risk").textContent =
+    "Demo warning: flood-prone zone. No live disaster-risk feed is connected.";
+}
+
+// COMMUNITY RESCUE DEMO
+function rescue() {
+  document.getElementById("rescue").textContent =
+    "Demo help request created locally. No nearby users or rescue services were notified.";
+}
+
+// NAVIGATION ACTIVE STATE
+document.querySelectorAll(".nav-link").forEach(link => {
+  link.addEventListener("click", function() {
+    document.querySelectorAll(".nav-link").forEach(item =>
+      item.classList.remove("active")
+    );
+
+    this.classList.add("active");
+  });
 });
 
-localStorage.setItem("alertxMeshQueue",JSON.stringify(meshQueue));
+// CONNECTION STATUS
+window.addEventListener("online", updateDashboard);
+window.addEventListener("offline", updateDashboard);
 
-document.getElementById("meshSyncBtn").style.display=
-!meshOffline && meshQueue.length>0 ? "inline-block":"none";
-}
-
-function toggleMeshNetwork(){
-meshOffline=!meshOffline;
-
-const status=document.getElementById("meshStatus");
-
-if(meshOffline){
-status.textContent="● OFFLINE";
-status.classList.add("offline");
-document.getElementById("meshmsg").textContent=
-"Network failure simulated. Messages will be queued locally.";
-}else{
-status.textContent="● CONNECTED";
-status.classList.remove("offline");
-document.getElementById("meshmsg").textContent=
-"Network restored in simulation. You can sync queued messages.";
-}
-
+// INITIALIZE
+displayReports();
 renderMeshQueue();
-}
-
-async function scanMeshDevices(){
-const output=document.getElementById("meshScanMsg");
-
-if(!navigator.bluetooth){
-output.textContent="Bluetooth scanning is not supported by this browser.";
-return;
-}
-
-try{
-output.textContent="Select a Bluetooth device in the browser prompt.";
-
-const device=await navigator.bluetooth.requestDevice({
-acceptAllDevices:true
-});
-
-output.textContent="Selected device: "+
-(device.name||"Unnamed device")+
-". Device selection does not establish a mesh connection.";
-}catch(error){
-output.textContent="No device selected or Bluetooth scan cancelled.";
-}
-}
-
-function queueMeshMessage(){
-const input=document.getElementById("meshMessage");
-const text=input.value.trim();
-
-if(!text){
-alert("Please enter an emergency message.");
-return;
-}
-
-meshQueue.push({
-text:text,
-time:new Date().toLocaleTimeString()
-});
-
-input.value="";
-
-document.getElementById("meshmsg").textContent=
-"Emergency message saved in the local queue.";
-
-renderMeshQueue();
-}
-
-function syncMeshMessages(){
-if(meshOffline){
-alert("Reconnect the simulated network before syncing.");
-return;
-}
-
-if(meshQueue.length===0){
-alert("No messages to sync.");
-return;
-}
-
-const count=meshQueue.length;
-meshQueue=[];
-
-renderMeshQueue();
-
-document.getElementById("meshmsg").textContent=
-count+" message(s) cleared from the demo queue. No actual delivery was performed.";
-}
-
-renderMeshQueue();
-
-// OTHER FEATURES
-function showRoute(){document.getElementById("route").innerHTML="Suggested route → Government School Shelter (1.2km).";}
-function checkZone(){document.getElementById("risk").innerHTML="Warning: Flood-prone zone detected.";}
-function rescue(){document.getElementById("rescue").innerHTML="Help request sent to nearby users.";}
-
-// STEP 2: LIVE WEATHER & HEAT MAP + SAFE PLACES
-async function loadLiveWeatherAndHeatMap() {
-    try {
-        let response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=LAT&longitude=LON&current_weather=true");
-        let data = await response.json();
-
-        map.eachLayer(layer => {
-            if(layer instanceof L.Marker && layer != userMarker) map.removeLayer(layer);
-        });
-
-        if(data.disasters){
-            data.disasters.forEach(d => {
-                L.marker([d.lat, d.lon]).addTo(map)
-                .bindPopup(`⚠️ ${d.type}<br>Severity: ${d.severity}`);
-            });
-        }
-
-        if(data.safePlaces){
-            data.safePlaces.forEach(s => {
-                L.marker([s.lat, s.lon], {
-                    icon: L.icon({
-                        iconUrl:"https://cdn-icons-png.flaticon.com/512/190/190411.png",
-                        iconSize:[30,30]
-                    })
-                }).addTo(map).bindPopup(`🏠 ${s.name}`);
-            });
-        }
-
-        if(data.weather){
-            document.getElementById("weather").innerHTML =
-            `Temp: ${data.weather.temperature}°C | Wind: ${data.weather.windspeed} km/h`;
-        }
-
-    } catch(e){
-        console.log("Live weather/heat map load error:", e);
-    }
-}
-
-loadLiveWeatherAndHeatMap();
-setInterval(loadLiveWeatherAndHeatMap,300000);
+updateDashboard();
 </script>
 
 </body>
 </html>
+```
